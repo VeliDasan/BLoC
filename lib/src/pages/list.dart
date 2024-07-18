@@ -1,4 +1,5 @@
 import 'package:bloc_yapisi/src/elements/addButton.dart';
+import 'package:bloc_yapisi/src/pages/vehicleDetail.dart';
 import 'package:bloc_yapisi/src/widgets/list_body.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:bloc_yapisi/src/blocs/listBLoC/list_event.dart';
 import 'package:bloc_yapisi/src/blocs/listBLoC/list_state.dart';
 import '../elements/pageLoading.dart';
 import '../elements/appBar.dart';
-import 'listDetail.dart';
 
 class ListScreen extends StatefulWidget {
   const ListScreen({super.key});
@@ -44,12 +44,12 @@ class _ListScreenState extends State<ListScreen> {
                   ? pageLoading()
                   : Column(
                       children: [
-                        addButton(
+                        /*addButton(
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ListDetailScreen()));
+                                  builder: (context) => VehicleDetailScreen(deviceId: deviceId,)));
                             },
-                            title: 'Bas'),
+                            title: 'Bas'),*/
                         listScrollList(
                             vehicleState: vehicleState,
                             limit: limit,

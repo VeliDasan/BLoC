@@ -1,3 +1,6 @@
+import 'package:bloc_yapisi/src/pages/vehicleDetail.dart';
+
+import '../blocs/detailBLoc/detail_state.dart';
 import '../blocs/listBLoC/list_state.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +14,9 @@ Widget listScrollList(
         itemCount: vehicleState.listData.length,
         itemBuilder: (context, index) {
           return InkWell(
-            onTap: (){
-
+            onTap: ()async{
+              int selectedVehicleId=vehicleState.listData[index].id;
+              await Navigator.push(context, MaterialPageRoute(builder: (context)=> VehicleDetailScreen(deviceId: selectedVehicleId,)));
             },
             child: Dismissible(
               confirmDismiss: (DismissDirection direction) async {

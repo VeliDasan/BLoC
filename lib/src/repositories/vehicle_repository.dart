@@ -13,17 +13,8 @@ class VehicleRepository {
   }
 
   Future<VehicleDetail> getVehicleDetail({required int deviceId}) async {
-    
-    
-    
-    
-    
-    return VehicleDetail(
-        fuelTankLevel: 10,
-        longitude: 10,
-        latitude: 10,
-        deviceId: 10,
-        speed: 10,
-        km: 10);
+    return vehicleDetailList
+        .where((element) => element.deviceId == deviceId)
+        .first;
   }
 }

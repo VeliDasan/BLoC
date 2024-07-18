@@ -7,6 +7,7 @@ import 'list_state.dart';
 class ListBloc extends Bloc<ListEvent, ListState> {
   final VehicleRepository vehicleRepository = VehicleRepository();
 
+
   ListBloc() : super(ListLoadingState()) {
     on<GetListVehicles>((event, emit) async {
       emit(ListLoadingState());
@@ -19,6 +20,9 @@ class ListBloc extends Bloc<ListEvent, ListState> {
         emit(ListErrorState());
       }
     });
+
+
+
 
     on<DeleteVehicle>((event, emit) async {
       emit(DeleteLoading());
