@@ -5,7 +5,9 @@ import '../blocs/listBLoC/list_state.dart';
 import 'package:flutter/material.dart';
 
 Widget listScrollList(
-    {required ListSuccessState vehicleState, required int limit, required Function onDelete}) =>
+        {required ListSuccessState vehicleState,
+        required int limit,
+        required Function onDelete}) =>
     ListView.builder(
         physics: const BouncingScrollPhysics(),
         addAutomaticKeepAlives: false,
@@ -14,10 +16,11 @@ Widget listScrollList(
         itemCount: vehicleState.listData.length,
         itemBuilder: (context, index) {
           return InkWell(
-            onTap: ()async{
-              int selectedVehicleId=vehicleState.listData[index].id;
-              await Navigator.push(context, MaterialPageRoute(builder: (context)=> VehicleDetailScreen(deviceId: selectedVehicleId,)));
-            },
+            onTap: () async => await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => VehicleDetailScreen(
+                        deviceId: vehicleState.listData[index].id))),
             child: Dismissible(
               confirmDismiss: (DismissDirection direction) async {
                 bool delete = await showDialog(

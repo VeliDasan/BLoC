@@ -1,4 +1,4 @@
-import 'package:bloc_yapisi/src/models/vehicleDetail.dart';
+import '../../models/vehicleDetail.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class DetailState extends Equatable {
