@@ -23,7 +23,7 @@ class _ListScreenState extends State<ListScreen> {
   Widget build(BuildContext context) => BlocProvider<ListBloc>(
       create: (context) => ListBloc()..add(GetListVehicles(limit: limit)),
       child: Scaffold(
-          appBar: appBar(title: 'Liste'),
+          appBar: appBar(title: 'Listelerim'),
           body: BlocConsumer<ListBloc, ListState>(
               listener: (vehicleContext, vehicleState) {
                 if (vehicleState is ListSuccessState) {
