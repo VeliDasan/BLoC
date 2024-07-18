@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/vehicle.dart';
+import '../models/vehicleDetail.dart';
 
 Color appBarBackgroundColor = Colors.white;
 Color loadingColor = Colors.blue;
@@ -11,11 +12,49 @@ List<Vehicle> list = [
   Vehicle(plate: '39 ST 437', id: 3),
   Vehicle(plate: '39 ST 437', id: 4),
   Vehicle(plate: '39 ST 437', id: 5),
-  Vehicle(plate: '39 ST 437', id: 6),
-  Vehicle(plate: '39 ST 437', id: 7),
-  Vehicle(plate: '39 ST 437', id: 8),
-  Vehicle(plate: '39 ST 437', id: 9),
-  Vehicle(plate: '39 ST 437', id: 10),
-  Vehicle(plate: '39 ST 437', id: 11),
-  Vehicle(plate: '39 ST 437', id: 12),
+];
+
+List<VehicleDetail> vehicleDetailList = [
+  VehicleDetail(
+      fuelTankLevel: 10,
+      longitude: 41,
+      latitude: 29,
+      deviceId: 0,
+      km: 132.857,
+      speed: 90),
+  VehicleDetail(
+      fuelTankLevel: 10,
+      longitude: 41,
+      latitude: 29,
+      deviceId: 1,
+      km: 132.857,
+      speed: 90),
+  VehicleDetail(
+      fuelTankLevel: 10,
+      longitude: 41,
+      latitude: 29,
+      deviceId: 2,
+      km: 132.857,
+      speed: 90),
+  VehicleDetail(
+      fuelTankLevel: 10,
+      longitude: 41,
+      latitude: 29,
+      deviceId: 3,
+      km: 132.857,
+      speed: 90),
+  VehicleDetail(
+      fuelTankLevel: 10,
+      longitude: 41,
+      latitude: 29,
+      deviceId: 4,
+      km: 132.857,
+      speed: 90),
+  VehicleDetail(
+      fuelTankLevel: 10,
+      longitude: 41,
+      latitude: 29,
+      deviceId: 5,
+      km: 132.857,
+      speed: 90),
 ];
