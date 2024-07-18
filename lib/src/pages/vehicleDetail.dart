@@ -15,7 +15,7 @@ class AScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: 'DENEME'),
+      appBar: appBar(title: 'DENEME',context: context),
       body: Center(
         child: Text(name),
       ),
@@ -36,7 +36,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: "Detay Sayfa"),
+      appBar: appBar(title: "Detay Sayfa",context: context),
       body: BlocProvider(
         create: (context) =>
             DetailBloc()..add(GetVehicleDetail(deviceId: widget.deviceId)),

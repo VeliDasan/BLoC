@@ -32,7 +32,7 @@ class _ListScreenState extends State<ListScreen> {
       create: (context) =>
           ListBloc()..add(GetListVehicles(limit: checkLimit())),
       child: Scaffold(
-          appBar: appBar(title: 'Listelerim'),
+          appBar: appBar(title: 'Listelerim', context:context ),
           body: BlocConsumer<ListBloc, ListState>(
               listener: (vehicleContext, vehicleState) {
                 if (vehicleState is ListSuccessState) {
