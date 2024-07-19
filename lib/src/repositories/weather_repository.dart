@@ -9,8 +9,7 @@ class WeatherRepository {
         'https://api.weatherapi.com/v1/current.json?key=baf35198716c4b8d9a7123131241807&q=Istanbul');
     print(response);
     if (response.statusCode == 200) {
-      var data = response.data['current'];
-      Weather weather = Weather.fromJson(data);
+      Weather weather = Weather.fromJson(response.data);
       return weather;
     } else {
       throw Exception('Failed to load weather data');

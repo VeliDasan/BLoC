@@ -1,6 +1,4 @@
 import 'package:bloc_yapisi/src/pages/vehicleDetail.dart';
-
-import '../blocs/detailBLoc/detail_state.dart';
 import '../blocs/listBLoC/list_state.dart';
 import 'package:flutter/material.dart';
 

@@ -1,20 +1,13 @@
-
-
 class Weather {
+  final double tempC;
+  final String name;
 
+  Weather({required this.tempC, required this.name});
 
-  final double temp_c;
-  final int is_day;
-
-  Weather(
-      { required this.temp_c, required this.is_day});
-
-  factory Weather.fromJson(Map<String, dynamic> json){
+  factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
-
-      temp_c: json["temp_c"],
-      is_day: json["is_day"],
+      tempC: json['current']['temp_c'],
+      name: json['location']['name'],
     );
   }
-
 }

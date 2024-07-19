@@ -5,7 +5,7 @@ import 'package:bloc_yapisi/src/elements/pageLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/detailBLoc/detail_event.dart';
+import 'package:bloc_yapisi/src/blocs/detailBLoc/detail_event.dart';
 
 class AScreen extends StatelessWidget {
   final String name;

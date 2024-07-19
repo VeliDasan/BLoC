@@ -1,11 +1,11 @@
-import '../widgets/list_body.dart';
+import 'package:bloc_yapisi/src/widgets/list_body.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_yapisi/src/blocs/listBLoC/list_bloc.dart';
 import 'package:bloc_yapisi/src/blocs/listBLoC/list_event.dart';
 import 'package:bloc_yapisi/src/blocs/listBLoC/list_state.dart';
-import '../elements/pageLoading.dart';
-import '../elements/appBar.dart';
+import 'package:bloc_yapisi/src/elements/pageLoading.dart';
+import 'package:bloc_yapisi/src/elements/appBar.dart';
 
 class ListScreen extends StatefulWidget {
   const ListScreen({super.key});
@@ -32,7 +32,7 @@ class _ListScreenState extends State<ListScreen> {
       create: (context) =>
           ListBloc()..add(GetListVehicles(limit: checkLimit())),
       child: Scaffold(
-          appBar: appBar(title: 'Listelerim', context:context ),
+          appBar: appBar(title: 'Listelerim', context: context),
           body: BlocConsumer<ListBloc, ListState>(
               listener: (vehicleContext, vehicleState) {
                 if (vehicleState is ListSuccessState) {
