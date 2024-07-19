@@ -1,27 +1,12 @@
-import 'package:bloc_yapisi/src/blocs/detailBLoc/detail_bloc.dart';
-import 'package:bloc_yapisi/src/blocs/detailBLoc/detail_state.dart';
-import 'package:bloc_yapisi/src/elements/appBar.dart';
-import 'package:bloc_yapisi/src/elements/pageLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:bloc_yapisi/src/blocs/detailBLoc/detail_event.dart';
-
-class AScreen extends StatelessWidget {
-  final String name;
-
-  const AScreen({super.key, required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(title: 'DENEME',context: context),
-      body: Center(
-        child: Text(name),
-      ),
-    );
-  }
-}
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../blocs/detailBLoc/detail_bloc.dart';
+import '../blocs/detailBLoc/detail_event.dart';
+import '../blocs/detailBLoc/detail_state.dart';
+import '../elements/appBar.dart';
+import '../elements/locationButton.dart';
+import '../elements/pageLoading.dart';
 
 class VehicleDetailScreen extends StatefulWidget {
   final int deviceId;
@@ -33,10 +18,33 @@ class VehicleDetailScreen extends StatefulWidget {
 }
 
 class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
+  GoogleMapController? _mapController;
+  bool _mapVisible = false;
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
+  }
+
+  void _moveToVehicleLocation(double latitude, double longitude) {
+    if (_mapController != null) {
+      _mapController!.animateCamera(
+        CameraUpdate.newLatLng(
+          LatLng(latitude, longitude),
+        ),
+      );
+    }
+  }
+
+  void _toggleMapVisibility() {
+    setState(() {
+      _mapVisible = !_mapVisible;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: "Detay Sayfa",context: context),
+      appBar: appBar(title: "Detay Sayfa", context: context),
       body: BlocProvider(
         create: (context) =>
             DetailBloc()..add(GetVehicleDetail(deviceId: widget.deviceId)),
@@ -51,24 +59,59 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AScreen(
-                                      name: state
-                                          .vehicleDetailData.deviceId
-                                          .toString())));
-                        },
-                        child: Text(
-                            'Device ID: ${state.vehicleDetailData.deviceId}')),
                     Text(
-                        'Fuel Tank Level: ${state.vehicleDetailData.fuelTankLevel}%'),
+                      'Device ID: ${state.vehicleDetailData.deviceId}',
+                    ),
+                    Text(
+                      'Fuel Tank Level: ${state.vehicleDetailData.fuelTankLevel}%',
+                    ),
                     Text('Longitude: ${state.vehicleDetailData.longitude}'),
                     Text('Latitude: ${state.vehicleDetailData.latitude}'),
                     Text('KM: ${state.vehicleDetailData.km}'),
                     Text('Speed: ${state.vehicleDetailData.speed} km/h'),
+                    // Add Google Map widget
+                    Visibility(
+                      visible: _mapVisible,
+                      child: Container(
+                        height: 300,
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: GoogleMap(
+                            onMapCreated: _onMapCreated,
+                            // Initialize the map controller
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(
+                                state.vehicleDetailData.latitude,
+                                state.vehicleDetailData.longitude,
+                              ),
+                              zoom: 14,
+                            ),
+                            markers: {
+                              Marker(
+                                markerId: MarkerId('vehicle_location'),
+                                position: LatLng(
+                                  state.vehicleDetailData.latitude,
+                                  state.vehicleDetailData.longitude,
+                                ),
+                                infoWindow:
+                                    InfoWindow(title: 'Vehicle Location'),
+                              ),
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    locationButton(
+                      onPressed: () {
+                        _toggleMapVisibility();
+                        _moveToVehicleLocation(
+                          state.vehicleDetailData.latitude,
+                          state.vehicleDetailData.longitude,
+                        );
+                      },
+                      title: "Konuma Git",
+                    ),
                   ],
                 ),
               );

@@ -12,7 +12,7 @@ class WeatherRepository {
       Weather weather = Weather.fromJson(response.data);
       return weather;
     } else {
-      throw Exception('Failed to load weather data');
+      throw Exception('veriler gelemedi');
     }
   }
 }

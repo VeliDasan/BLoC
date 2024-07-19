@@ -13,6 +13,7 @@ dependencies:
   dio:
   equatable:
   flutter_bloc:
+  google_maps_flutter:
 
 dev_dependencies:
   flutter_test:

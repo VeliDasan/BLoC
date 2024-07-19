@@ -35,9 +35,9 @@ PreferredSizeWidget appBar({
                       );
                     } else if (state is WeatherErrorState) {
                       return const AlertDialog(
-                          content: Text('Failed to fetch weather data'));
+                          content: Text('veriler gelemedi'));
                     } else {
-                      return const AlertDialog(content: Text('Unknown state'));
+                      return const AlertDialog(content: Text('bilinmeyen durum'));
                     }
                   },
                 );

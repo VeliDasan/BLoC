@@ -17,15 +17,15 @@ List<Vehicle> list = [
 List<VehicleDetail> vehicleDetailList = [
   VehicleDetail(
       fuelTankLevel: 10,
-      longitude: 41,
-      latitude: 29,
+      longitude: 29.9857 ,
+      latitude: 39.4200 ,
       deviceId: 0,
       km: 132.857,
       speed: 90),
   VehicleDetail(
       fuelTankLevel: 10,
-      longitude: 41,
-      latitude: 29,
+      longitude: 29,
+      latitude: 41,
       deviceId: 1,
       km: 132.857,
       speed: 90),
