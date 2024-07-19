@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../blocs/detailBLoc/detail_bloc.dart';
 import '../blocs/detailBLoc/detail_event.dart';
 import '../blocs/detailBLoc/detail_state.dart';
+import '../blocs/mapBloc/map_bloc.dart';
 import '../elements/appBar.dart';
 import '../elements/locationButton.dart';
 import '../elements/pageLoading.dart';
@@ -19,7 +20,6 @@ class VehicleDetailScreen extends StatefulWidget {
 
 class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   GoogleMapController? _mapController;
-  bool _mapVisible = false;
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
@@ -35,19 +35,20 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
     }
   }
 
-  void _toggleMapVisibility() {
-    setState(() {
-      _mapVisible = !_mapVisible;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(title: "Detay Sayfa", context: context),
-      body: BlocProvider(
-        create: (context) =>
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
             DetailBloc()..add(GetVehicleDetail(deviceId: widget.deviceId)),
+          ),
+          BlocProvider(
+            create: (context) => MapBloc(),
+          ),
+        ],
         child: BlocConsumer<DetailBloc, DetailState>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -59,52 +60,52 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Device ID: ${state.vehicleDetailData.deviceId}',
-                    ),
-                    Text(
-                      'Fuel Tank Level: ${state.vehicleDetailData.fuelTankLevel}%',
-                    ),
+                    Text('Device ID: ${state.vehicleDetailData.deviceId}'),
+                    Text('Fuel Tank Level: ${state.vehicleDetailData.fuelTankLevel}%'),
                     Text('Longitude: ${state.vehicleDetailData.longitude}'),
                     Text('Latitude: ${state.vehicleDetailData.latitude}'),
                     Text('KM: ${state.vehicleDetailData.km}'),
                     Text('Speed: ${state.vehicleDetailData.speed} km/h'),
-                    // Add Google Map widget
-                    Visibility(
-                      visible: _mapVisible,
-                      child: Container(
-                        height: 300,
-                        width: double.infinity,
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: GoogleMap(
-                            onMapCreated: _onMapCreated,
-                            // Initialize the map controller
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(
-                                state.vehicleDetailData.latitude,
-                                state.vehicleDetailData.longitude,
-                              ),
-                              zoom: 14,
-                            ),
-                            markers: {
-                              Marker(
-                                markerId: MarkerId('vehicle_location'),
-                                position: LatLng(
-                                  state.vehicleDetailData.latitude,
-                                  state.vehicleDetailData.longitude,
+                    BlocBuilder<MapBloc, MapState>(
+                      builder: (context, mapState) {
+                        if (mapState is MapVisibleState) {
+                          return Container(
+                            height: 300,
+                            width: double.infinity,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: GoogleMap(
+                                onMapCreated: _onMapCreated,
+                                initialCameraPosition: CameraPosition(
+                                  target: LatLng(
+                                    state.vehicleDetailData.latitude,
+                                    state.vehicleDetailData.longitude,
+                                  ),
+                                  zoom: 14,
                                 ),
-                                infoWindow:
-                                    InfoWindow(title: 'Vehicle Location'),
+                                markers: {
+                                  Marker(
+                                    markerId:const MarkerId('vehicle_location'),
+                                    position: LatLng(
+                                      state.vehicleDetailData.latitude,
+                                      state.vehicleDetailData.longitude,
+                                    ),
+                                    infoWindow:const InfoWindow(title: 'Vehicle Location'),
+                                  ),
+                                },
                               ),
-                            },
-                          ),
-                        ),
-                      ),
+                            ),
+                          );
+                        }
+                        return Container();
+                      },
                     ),
                     locationButton(
                       onPressed: () {
-                        _toggleMapVisibility();
+                        context.read<MapBloc>().add(ToggleMapVisibility(
+                          latitude: state.vehicleDetailData.latitude,
+                          longitude: state.vehicleDetailData.longitude,
+                        ));
                         _moveToVehicleLocation(
                           state.vehicleDetailData.latitude,
                           state.vehicleDetailData.longitude,
