@@ -1,3 +1,5 @@
+import 'package:bloc_yapisi/src/blocs/weatherBLoC/weather_bloc.dart';
+import 'package:bloc_yapisi/src/blocs/weatherBLoC/weather_state.dart';
 import 'package:bloc_yapisi/src/widgets/list_body.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -28,34 +30,39 @@ class _ListScreenState extends State<ListScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocProvider<ListBloc>(
-      create: (context) =>
-          ListBloc()..add(GetListVehicles(limit: checkLimit())),
-      child: Scaffold(
-          appBar: appBar(title: 'Listelerim', context: context),
-          body: BlocConsumer<ListBloc, ListState>(
-              listener: (vehicleContext, vehicleState) {
-                if (vehicleState is ListSuccessState) {
-                  print(vehicleState.listData.toString());
-                } else if (vehicleState is ListErrorState) {
-                  showDialog(
-                      context: context,
-                      builder: (context) =>
-                          const AlertDialog(content: Text('HATA')));
-                } else if (vehicleState is DeleteSuccess) {
-                  vehicleContext
-                      .read<ListBloc>()
-                      .add(GetListVehicles(limit: checkLimit()));
-                }
-              },
-              builder: (vehicleContext, vehicleState) =>
-                  vehicleState is! ListSuccessState
-                      ? pageLoading()
-                      : listScrollList(
-                          vehicleState: vehicleState,
-                          limit: checkLimit(),
-                          onDelete: (index) {
-                            vehicleContext.read<ListBloc>().add(DeleteVehicle(
-                                deviceId: vehicleState.listData[index].id));
-                          }))));
+  Widget build(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider<ListBloc>(
+            create: (context) =>
+                ListBloc()..add(GetListVehicles(limit: checkLimit())),
+          ),
+        ],
+        child: Scaffold(
+            appBar: appBar(title: 'Listelerim', context: context),
+            body: BlocConsumer<ListBloc, ListState>(
+                listener: (vehicleContext, vehicleState) {
+                  if (vehicleState is ListSuccessState) {
+                    print(vehicleState.listData.toString());
+                  } else if (vehicleState is ListErrorState) {
+                    showDialog(
+                        context: context,
+                        builder: (context) =>
+                        const AlertDialog(content: Text('HATA')));
+                  } else if (vehicleState is DeleteSuccess) {
+                    vehicleContext
+                        .read<ListBloc>()
+                        .add(GetListVehicles(limit: checkLimit()));
+                  }
+                },
+                builder: (vehicleContext, vehicleState) => vehicleState
+                is! ListSuccessState
+                    ? pageLoading()
+                    : listScrollList(
+                    vehicleState: vehicleState,
+                    limit: checkLimit(),
+                    onDelete: (index) {
+                      vehicleContext.read<ListBloc>().add(DeleteVehicle(
+                          deviceId: vehicleState.listData[index].id));
+                    })))
+      );
 }

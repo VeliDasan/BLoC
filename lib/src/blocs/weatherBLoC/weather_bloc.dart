@@ -5,15 +5,15 @@ import 'package:bloc_yapisi/src/repositories/weather_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
-  final WeatherRepository weatherRepository;
+  final WeatherRepository weatherRepository=WeatherRepository();
 
-  WeatherBloc({required this.weatherRepository}) : super(WeatherLoadingState()) {
+  WeatherBloc() : super(WeatherLoadingState()) {
     on<GetWeather>((event, emit) async {
       emit(WeatherLoadingState());
-      await Future.delayed(const Duration(milliseconds: 1555));
       try {
         final Weather? weather = await weatherRepository.getWeather();
         if (weather != null) {
+          print(weather);
           emit(WeatherSuccessState(WeatherDetailData: weather));
         } else {
           emit(WeatherErrorState());

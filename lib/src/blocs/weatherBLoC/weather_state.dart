@@ -13,7 +13,7 @@ class WeatherLoadingState extends WeatherState {
 class WeatherSuccessState extends WeatherState {
   const WeatherSuccessState({required this.WeatherDetailData});
 
-  final  Weather WeatherDetailData;
+  final  Weather WeatherDetailData;//K
 
   @override
   List<dynamic> get props => [];

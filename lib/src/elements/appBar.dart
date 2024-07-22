@@ -16,30 +16,32 @@ PreferredSizeWidget appBar({
       actions: [
         IconButton(
           onPressed: () {
-            final weatherBloc = BlocProvider.of<WeatherBloc>(context);
-            weatherBloc.add(const GetWeather());
-
             showDialog(
               context: context,
               builder: (context) {
-                return BlocBuilder<WeatherBloc, WeatherState>(
-                  builder: (context, state) {
-                    if (state is WeatherLoadingState) {
-                      pageLoading();
-                      return const AlertDialog();
-                    } else if (state is WeatherSuccessState) {
-                      return AlertDialog(
-                        content: Text(
-                          'Temperature: ${state.WeatherDetailData.tempC}°C\nLocation: ${state.WeatherDetailData.name}',
-                        ),
-                      );
-                    } else if (state is WeatherErrorState) {
-                      return const AlertDialog(
-                          content: Text('veriler gelemedi'));
-                    } else {
-                      return const AlertDialog(content: Text('bilinmeyen durum'));
-                    }
-                  },
+                return BlocProvider<WeatherBloc>(
+                  create: (context) => WeatherBloc()..add(const GetWeather()),
+                  child: BlocBuilder<WeatherBloc, WeatherState>(
+                    builder: (context, state) {
+                      print(state);
+                      if (state is WeatherLoadingState) {
+                        pageLoading();
+                        return const AlertDialog();
+                      } else if (state is WeatherSuccessState) {
+                        return AlertDialog(
+                          content: Text(
+                            'Temperature: ${state.WeatherDetailData.tempC}°C\nLocation: ${state.WeatherDetailData.name}',
+                          ),
+                        );
+                      } else if (state is WeatherErrorState) {
+                        return const AlertDialog(
+                            content: Text('veriler gelemedi'));
+                      } else {
+                        return const AlertDialog(
+                            content: Text('bilinmeyen durum'));
+                      }
+                    },
+                  ),
                 );
               },
             );

@@ -6,10 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'src/pages/list.dart';
 
 void main() => runApp(
-  BlocProvider(
-  create: (context) => WeatherBloc(weatherRepository: WeatherRepository() ),
-  child: MyApp(),
-),);
+      MyApp(),
+    );
 
 class MyApp extends StatelessWidget {
   @override
