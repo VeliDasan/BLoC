@@ -11,15 +11,33 @@ class WeatherLoadingState extends WeatherState {
 }
 
 class WeatherSuccessState extends WeatherState {
-  const WeatherSuccessState({required this.WeatherDetailData});
+  const WeatherSuccessState({required this.weatherDetailData});
 
-  final  Weather WeatherDetailData;//K
+  final Weather weatherDetailData;
 
   @override
-  List<dynamic> get props => [];
+  List<dynamic> get props => [weatherDetailData];
 }
 
 class WeatherErrorState extends WeatherState {
   @override
   List<dynamic> get props => [];
+}
+
+class SearchToggleState extends WeatherState {
+  final bool aramaYapiliyorMu;
+
+  const SearchToggleState(this.aramaYapiliyorMu);
+
+  @override
+  List<Object> get props => [aramaYapiliyorMu];
+}
+
+class CitySuggestionsState extends WeatherState {
+  final List<String> cities;
+
+  const CitySuggestionsState(this.cities);
+
+  @override
+  List<Object> get props => [cities];
 }
