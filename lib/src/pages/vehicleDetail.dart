@@ -158,19 +158,37 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                               return Container();
                             },
                           ),
-                          locationButton(
-                            onPressed: () {
-                              context.read<MapBloc>().add(ToggleMapVisibility(
-                                    latitude: state.vehicleDetailData.latitude,
-                                    longitude:
-                                        state.vehicleDetailData.longitude,
-                                  ));
-                              _moveToVehicleLocation(
-                                state.vehicleDetailData.latitude,
-                                state.vehicleDetailData.longitude,
+                          BlocBuilder<MapBloc, MapState>(
+                            builder: (context, mapState) {
+                              return locationButton(
+                                onPressed: () {
+                                  if (mapState is MapVisibleState) {
+                                    context
+                                        .read<MapBloc>()
+                                        .add(ToggleMapVisibility(
+                                          latitude: mapState.latitude,
+                                          longitude: mapState.longitude,
+                                        ));
+                                  } else if (mapState is MapHiddenState) {
+                                    context
+                                        .read<MapBloc>()
+                                        .add(ToggleMapVisibility(
+                                          latitude:
+                                              state.vehicleDetailData.latitude,
+                                          longitude:
+                                              state.vehicleDetailData.longitude,
+                                        ));
+                                    _moveToVehicleLocation(
+                                      state.vehicleDetailData.latitude,
+                                      state.vehicleDetailData.longitude,
+                                    );
+                                  }
+                                },
+                                title: mapState is MapVisibleState
+                                    ? "Konumu Gizle"
+                                    : "Konuma Git",
                               );
                             },
-                            title: "Konuma Git",
                           ),
                         ],
                       ),

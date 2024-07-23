@@ -6,8 +6,8 @@ class WeatherRepository {
   Future<Weather?> getWeather(String city) async {
     Dio dio = Dio();
     dio.options.headers['Content-Type'] = "application/json; charset=UTF-8";
-    var response = await dio.get(
-        'http://api.weatherapi.com/v1/current.json?key=$apiKey&q=$city');
+    var response = await dio
+        .get('http://api.weatherapi.com/v1/current.json?key=$apiKey&q=$city');
     print(response);
     if (response.statusCode == 200) {
       Weather weather = Weather.fromJson(response.data);
@@ -21,10 +21,10 @@ class WeatherRepository {
     Dio dio = Dio();
     dio.options.headers['Content-Type'] = "application/json; charset=UTF-8";
 
-    var response = await dio.get(
-        'http://api.weatherapi.com/v1/search.json?key=$apiKey&q=$query'); // Replace with your actual API endpoint
+    var response = await dio
+        .get('http://api.weatherapi.com/v1/search.json?key=$apiKey&q=$query');
 
-    print('City Suggestions Response: ${response.data}'); // Log the response
+    print('City Suggestions Response: ${response.data}');
     if (response.statusCode == 200) {
       var data = response.data as List;
       List<String> cities = data.map((item) => item['name'] as String).toList();
@@ -33,5 +33,4 @@ class WeatherRepository {
       throw Exception('Error fetching city suggestions');
     }
   }
-
 }

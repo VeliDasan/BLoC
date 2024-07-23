@@ -30,7 +30,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
     on<GetCitySuggestions>((event, emit) async {
       try {
-        final List<String> cities = await weatherRepository.getCitySuggestions(event.query);
+        final List<String> cities =
+            await weatherRepository.getCitySuggestions(event.query);
         emit(CitySuggestionsState(cities));
       } catch (e) {
         emit(WeatherErrorState());

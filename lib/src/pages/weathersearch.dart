@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'package:bloc_yapisi/src/elements/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_yapisi/src/blocs/weatherBLoC/weather_bloc.dart';
 import 'package:bloc_yapisi/src/blocs/weatherBLoC/weather_event.dart';
 import 'package:bloc_yapisi/src/blocs/weatherBLoC/weather_state.dart';
-import 'package:bloc_yapisi/src/utils/global.dart';
 
 class Weathersearch extends StatelessWidget {
   const Weathersearch({super.key});
@@ -39,55 +39,47 @@ class _WeathersearchContentState extends State<WeathersearchContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: appBarBackgroundColor,
-        centerTitle: true,
-        title: BlocBuilder<WeatherBloc, WeatherState>(
-          builder: (context, state) {
-            bool aramaYapiliyorMu = false;
-            if (state is SearchToggleState) {
-              aramaYapiliyorMu = state.aramaYapiliyorMu;
-            }
-            return aramaYapiliyorMu
-                ? TextField(
+      appBar: appBar(context: context, title: 'Hava Durumu Bilgileri'),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
               controller: _controller,
               decoration: InputDecoration(
-                hintText: "Ara",
-                hintStyle: TextStyle(color: Colors.black),
+                hintText: "Şehir Ara",
+                hintStyle: const TextStyle(color: Colors.black),
+                border: const OutlineInputBorder(),
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {
+                        context
+                            .read<WeatherBloc>()
+                            .add(GetWeather(_controller.text));
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.clear),
+                      color: Colors.red,
+                      onPressed: () {
+                        _controller.clear();
+                        context
+                            .read<WeatherBloc>()
+                            .add(const GetCitySuggestions(''));
+                      },
+                    ),
+                  ],
+                ),
               ),
               onChanged: _onSearchChanged,
               onSubmitted: (value) {
                 context.read<WeatherBloc>().add(GetWeather(value));
               },
-            )
-                : const Text(
-              "Hava Durumu Bilgileri",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            );
-          },
-        ),
-        actions: [
-          BlocBuilder<WeatherBloc, WeatherState>(
-            builder: (context, state) {
-              bool aramaYapiliyorMu = false;
-              if (state is SearchToggleState) {
-                aramaYapiliyorMu = state.aramaYapiliyorMu;
-              }
-              return IconButton(
-                onPressed: () {
-                  context.read<WeatherBloc>().add(ToggleSearch());
-                },
-                icon: Icon(
-                  aramaYapiliyorMu ? Icons.clear : Icons.search,
-                  color: aramaYapiliyorMu ? Colors.red : Colors.blueGrey,
-                ),
-              );
-            },
+            ),
           ),
-        ],
-      ),
-      body: Column(
-        children: [
           BlocBuilder<WeatherBloc, WeatherState>(
             builder: (context, state) {
               if (state is CitySuggestionsState) {
@@ -99,35 +91,58 @@ class _WeathersearchContentState extends State<WeathersearchContent> {
                         title: Text(state.cities[index]),
                         onTap: () {
                           _controller.text = state.cities[index];
-                          context.read<WeatherBloc>().add(GetWeather(state.cities[index]));
+                          context
+                              .read<WeatherBloc>()
+                              .add(GetWeather(state.cities[index]));
                         },
                       );
                     },
                   ),
                 );
-              } else {
-                return Center(child: Text('No city suggestions available.'));
-              }
-            },
-          ),
-          BlocBuilder<WeatherBloc, WeatherState>(
-            builder: (context, state) {
-              if (state is WeatherLoadingState) {
-                return Center(child: CircularProgressIndicator());
+              } else if (state is WeatherLoadingState) {
+                return const Center();
               } else if (state is WeatherSuccessState) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('City: ${state.weatherDetailData.name}'),
-                      Text('Temperature: ${state.weatherDetailData.tempC}°C'),
-                    ],
+                return Align(
+                  alignment: Alignment.topCenter,
+                  child: Card(
+                    margin: const EdgeInsets.all(8.0),
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.location_city, size: 24),
+                              const SizedBox(width: 8),
+                              Text('City: ${state.weatherDetailData.name}',
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              const Icon(Icons.thermostat, size: 24),
+                              const SizedBox(width: 8),
+                              Text(
+                                  'Temperature: ${state.weatherDetailData.tempC}°C',
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               } else if (state is WeatherErrorState) {
-                return Center(child: Text('Error fetching weather data'));
+                return const Center(/*child: Text('veriler çekilemedi hata')*/);
               } else {
-                return Center(child: Text('Please search for a city'));
+                return const Center(/*child: Text('şehir aratınız')*/);
               }
             },
           ),
