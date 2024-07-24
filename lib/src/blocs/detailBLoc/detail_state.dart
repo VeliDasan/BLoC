@@ -11,13 +11,18 @@ class DetailLoadingState extends DetailState {
 }
 
 class DetailSuccessState extends DetailState {
-  const DetailSuccessState({required this.vehicleDetailData});
+  const DetailSuccessState({
+    required this.vehicleDetailData,
+    required this.vehiclePlate,
+  });
 
   final VehicleDetail vehicleDetailData;
+  final String vehiclePlate;
 
   @override
-  List<dynamic> get props => [];
+  List<dynamic> get props => [vehicleDetailData, vehiclePlate];
 }
+
 
 class DetailErrorState extends DetailState {
   @override

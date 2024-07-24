@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bloc_yapisi/src/elements/appBar.dart';
+import 'package:bloc_yapisi/src/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_yapisi/src/blocs/weatherBLoC/weather_bloc.dart';
@@ -30,7 +30,7 @@ class _WeathersearchContentState extends State<WeathersearchContent> {
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     if (query.length >= 2) {
-      _debounce = Timer(const Duration(), () {
+      _debounce = Timer(const Duration(milliseconds: 500), () {
         context.read<WeatherBloc>().add(GetCitySuggestions(query));
       });
     }
@@ -39,45 +39,59 @@ class _WeathersearchContentState extends State<WeathersearchContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context: context, title: 'Hava Durumu Bilgileri'),
+      appBar: AppBar(
+          elevation: 0,
+          title: const Text(
+            "Hava Durumu Bilgileri",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          backgroundColor: appBarBackgroundColor),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                hintText: "Şehir Ara",
-                hintStyle: const TextStyle(color: Colors.black),
-                border: const OutlineInputBorder(),
-                suffixIcon: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () {
-                        context
-                            .read<WeatherBloc>()
-                            .add(GetWeather(_controller.text));
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.clear),
-                      color: Colors.red,
-                      onPressed: () {
-                        _controller.clear();
-                        context
-                            .read<WeatherBloc>()
-                            .add(const GetCitySuggestions(''));
-                      },
-                    ),
-                  ],
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+                gradient: const LinearGradient(
+                  colors: [Colors.indigo, Colors.blueAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(0, 2),
+                    blurRadius: 4.0,
+                  ),
+                ],
               ),
-              onChanged: _onSearchChanged,
-              onSubmitted: (value) {
-                context.read<WeatherBloc>().add(GetWeather(value));
-              },
+              child: TextField(
+                controller: _controller,
+                decoration: InputDecoration(
+                  hintText: "Şehir Ara",
+                  hintStyle: const TextStyle(color: Colors.white),
+                  border: InputBorder.none,
+                  prefixIcon: const Icon(Icons.search, color: Colors.white),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear, color: Colors.white),
+                    onPressed: () {
+                      _controller.clear();
+                      context
+                          .read<WeatherBloc>()
+                          .add(const GetCitySuggestions(''));
+                    },
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 20.0),
+                ),
+                style: const TextStyle(color: Colors.white),
+                onChanged: _onSearchChanged,
+                onSubmitted: (value) {
+                  context.read<WeatherBloc>().add(GetWeather(value));
+                },
+              ),
             ),
           ),
           BlocBuilder<WeatherBloc, WeatherState>(
@@ -103,46 +117,63 @@ class _WeathersearchContentState extends State<WeathersearchContent> {
                 return const Center();
               } else if (state is WeatherSuccessState) {
                 return Align(
-                  alignment: Alignment.topCenter,
-                  child: Card(
-                    margin: const EdgeInsets.all(8.0),
-                    elevation: 5,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.location_city, size: 24),
-                              const SizedBox(width: 8),
-                              Text('City: ${state.weatherDetailData.name}',
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              const Icon(Icons.thermostat, size: 24),
-                              const SizedBox(width: 8),
-                              Text(
-                                  'Temperature: ${state.weatherDetailData.tempC}°C',
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ],
+                    alignment: Alignment.topCenter,
+                    child: Card(
+                      margin: const EdgeInsets.all(8.0),
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                  ),
-                );
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Colors.indigo, Colors.blueAccent],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.location_city,
+                                      size: 24, color: Colors.white),
+                                  const SizedBox(width: 8),
+                                  Text('City: ${state.weatherDetailData.name}',
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white)),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  const Icon(Icons.thermostat,
+                                      size: 24, color: Colors.white),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                      'Temperature: ${state.weatherDetailData.tempC}°C',
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ));
               } else if (state is WeatherErrorState) {
-                return const Center(/*child: Text('veriler çekilemedi hata')*/);
+                return const Center(
+                    /*child: Text('Veriler çekilemedi, hata oluştu')*/);
               } else {
-                return const Center(/*child: Text('şehir aratınız')*/);
+                return const Center(/*child: Text('Şehir aratınız')*/);
               }
             },
           ),

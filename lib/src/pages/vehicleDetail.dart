@@ -75,39 +75,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                               children: [
                                 const Icon(Icons.directions_car),
                                 const SizedBox(width: 8),
-                                Text(
-                                    'Device ID: ${state.vehicleDetailData.deviceId}'),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Icon(Icons.local_gas_station),
-                                const SizedBox(width: 8),
-                                Text(
-                                    'Fuel Tank Level: ${state.vehicleDetailData.fuelTankLevel}%'),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Icon(Icons.location_on),
-                                const SizedBox(width: 8),
-                                Text(
-                                    'Longitude: ${state.vehicleDetailData.longitude}'),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Icon(Icons.location_on),
-                                const SizedBox(width: 8),
-                                Text(
-                                    'Latitude: ${state.vehicleDetailData.latitude}'),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Icon(Icons.speed),
-                                const SizedBox(width: 8),
-                                Text('KM: ${state.vehicleDetailData.km}'),
+                                Text('Araç: ${state.vehiclePlate}'),
                               ],
                             ),
                           ],
@@ -210,6 +178,20 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                             Colors.indigo,
                             Colors.red
                           ],
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 150.0),
+                            child:  Center(
+                              child:
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.speed),
+                                  Text('${state.vehicleDetailData.km}',style:const TextStyle(fontSize: 20),),
+                                ],
+                              )
+
+                            ),
+                          ),
                         ),
                       ),
                     ),
