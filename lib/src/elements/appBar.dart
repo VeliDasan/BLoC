@@ -26,7 +26,7 @@ PreferredSizeWidget appBar({
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>  User()
+                    builder: (context) =>const  UserPage()
                 ));
           },
           icon: const Icon(Icons.person, color: Colors.blue),

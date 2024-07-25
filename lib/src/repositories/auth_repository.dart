@@ -3,17 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final CollectionReference collectionKisiler = FirebaseFirestore.instance.collection("Kisiler");
+  final CollectionReference collectionKisiler =
+      FirebaseFirestore.instance.collection("Kisiler");
 
   Future<void> signUp({required String email, required String password}) async {
     try {
-
-      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Add user information to Firestore
       await addUserToFirestore(userCredential.user?.uid, email);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -28,7 +28,8 @@ class AuthRepository {
 
   Future<bool> signIn({required String email, required String password}) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
@@ -43,20 +44,9 @@ class AuthRepository {
   Future<void> addUserToFirestore(String? uid, String email) async {
     if (uid == null) return;
 
-    // Add user document to Firestore
     await collectionKisiler.doc(uid).set({
       'email': email,
-      'createdAt': Timestamp.now(), // Add other user info if needed
+      'createdAt': Timestamp.now(),
     });
   }
-  Future<void> getUserToFirestore(String? uid, String email) async {
-    if (uid == null) return;
-
-
-    await collectionKisiler.doc(uid).set({
-      'email': email,
-      'createdAt': Timestamp.now(), // Add other user info if needed
-    });
-  }
-
 }
