@@ -1,10 +1,12 @@
 import 'package:bloc_yapisi/src/blocs/loginBLoC/auth_event.dart';
 import 'package:bloc_yapisi/src/blocs/loginBLoC/auth_state.dart';
 import 'package:bloc_yapisi/src/repositories/auth_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
+  var collectionKisiler = FirebaseFirestore.instance.collection("Kisiler");
 
   AuthBloc({required this.authRepository}) : super(UnAuthenticated(error: '')) {
     on<SignUpRequested>((event, emit) async {
@@ -31,4 +33,5 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
   }
+
 }
