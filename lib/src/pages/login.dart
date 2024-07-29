@@ -29,11 +29,11 @@ class Login extends StatelessWidget {
               elevation: 0,
               title: const Text(
                 "Giriş",
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               bottom: const TabBar(
                 tabs: [
-                  Tab(text: 'Girş Yap'),
+                  Tab(text: 'Giriş Yap'),
                   Tab(text: 'Kayıt Ol'),
                 ],
               ),
@@ -50,13 +50,22 @@ class Login extends StatelessWidget {
                 }
                 if (state is UnAuthenticated) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Hata: E-mail veya şifre hatalı')),
+                    SnackBar(content: Text('Hata: ${state.error}')),
                   );
                 }
                 if (state is SignUpSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Kayıt Başarılı')),
+                  );
+                }
+                if (state is PasswordResetSuccess) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Şifre sıfırlama e-postası gönderildi.')),
+                  );
+                }
+                if (state is PasswordResetFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Şifre sıfırlama hatası: ${state.error}')),
                   );
                 }
               },
@@ -78,8 +87,7 @@ class Login extends StatelessWidget {
 
   Widget _buildLoginTab(BuildContext context) {
     final TextEditingController _loginEmailController = TextEditingController();
-    final TextEditingController _loginPasswordController =
-        TextEditingController();
+    final TextEditingController _loginPasswordController = TextEditingController();
 
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -132,16 +140,24 @@ class Login extends StatelessWidget {
               );
             },
           ),
+          TextButton(
+            onPressed: () {
+              final email = _loginEmailController.text;
+              context.read<AuthBloc>().add(PasswordResetRequested(email: email));
+            },
+            child: const Text(
+              'Şifremi Unuttum',
+              style: TextStyle(color: Colors.blue),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildSignUpTab(BuildContext context) {
-    final TextEditingController _signUpEmailController =
-        TextEditingController();
-    final TextEditingController _signUpPasswordController =
-        TextEditingController();
+    final TextEditingController _signUpEmailController = TextEditingController();
+    final TextEditingController _signUpPasswordController = TextEditingController();
 
     return Padding(
       padding: const EdgeInsets.all(15.0),

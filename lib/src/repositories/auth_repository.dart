@@ -49,4 +49,14 @@ class AuthRepository {
       'createdAt': Timestamp.now(),
     });
   }
+
+  Future<void> resetPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.toString());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

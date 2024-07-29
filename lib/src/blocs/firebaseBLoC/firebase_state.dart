@@ -13,7 +13,7 @@ class FirebaseInitial extends FirebaseState {
 class UserInfoLoaded extends FirebaseState {
   final DocumentSnapshot userInfo;
 
-  UserInfoLoaded({required this.userInfo});
+  const UserInfoLoaded({required this.userInfo});
 
   @override
   List<Object> get props => [userInfo];
@@ -27,8 +27,23 @@ class FirebaseLoading extends FirebaseState {
 class FirebaseError extends FirebaseState {
   final String error;
 
-  FirebaseError({required this.error});
+  const FirebaseError({required this.error});
 
   @override
   List<Object> get props => [error];
+}
+
+class UserDeleted extends FirebaseState {
+  @override
+  List<Object> get props => [];
+}
+
+class UserInfoUpdated extends FirebaseState {
+  @override
+  List<Object> get props => [];
+}
+
+class UserPasswordUpdated extends FirebaseState {
+  @override
+  List<Object> get props => [];
 }
