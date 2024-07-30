@@ -4,19 +4,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final CollectionReference collectionKisiler =
-  FirebaseFirestore.instance.collection("Kisiler");
+      FirebaseFirestore.instance.collection("Kisiler");
 
   Future<void> signUp(
       {required String email,
-        required String password,
-        required String name,
-        required String surname}) async {
+      required String password,
+      required String name,
+      required String surname}) async {
     try {
-      UserCredential userCredential = await _firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password
+      );
 
-      await addUserToFirestore(
-          userCredential.user?.uid, email, password, name, surname);
+
+      await addUserToFirestore(userCredential.user?.uid, email,password,name,surname);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw Exception('This password is too weak');
@@ -30,14 +33,8 @@ class AuthRepository {
 
   Future<bool> signIn({required String email, required String password}) async {
     try {
-      UserCredential userCredential = await _firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
-
-      String? uid = userCredential.user?.uid;
-      if (uid != null) {
-        await updateUserLoginInfo(uid);
-      }
-
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
@@ -49,26 +46,27 @@ class AuthRepository {
     }
   }
 
-  Future<void> addUserToFirestore(String? uid, String email, String password,
-      String name, String surname) async {
+  Future<void> addUserToFirestore(
+      String? uid,
+      String email,
+      String password,
+      String name,
+      String surname
+      ) async {
     if (uid == null) return;
 
+    // Şu anki zamanı al
+    Timestamp now = Timestamp.now();
+
+    // Firestore'daki kullanıcı belgesini güncelle veya oluştur
     await collectionKisiler.doc(uid).set({
       'email': email,
       'password': password,
       'name': name,
       'surname': surname,
-      'createdAt': Timestamp.now(),
-      'loginTimes': FieldValue.arrayUnion([Timestamp.now()]),
-    });
-  }
-
-  Future<void> updateUserLoginInfo(String uid) async {
-    Timestamp now = Timestamp.now();
-    await collectionKisiler.doc(uid).update({
-      'lastLogin': now,
+      'createdAt': now,
       'loginTimes': FieldValue.arrayUnion([now]),
-    });
+    }, SetOptions(merge:true));
   }
 
   Future<void> resetPassword({required String email}) async {
@@ -77,13 +75,5 @@ class AuthRepository {
     } on FirebaseAuthException catch (e) {
       throw Exception(e.toString());
     }
-  }
-
-  Future<Map<String, dynamic>?> getUserLoginInfo(String uid) async {
-    DocumentSnapshot documentSnapshot = await collectionKisiler.doc(uid).get();
-    if (documentSnapshot.exists) {
-      return documentSnapshot.data() as Map<String, dynamic>?;
-    }
-    return null;
   }
 }

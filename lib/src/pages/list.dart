@@ -20,7 +20,7 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-  int limitData = 4;
+  int limitData = 1;
 
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
