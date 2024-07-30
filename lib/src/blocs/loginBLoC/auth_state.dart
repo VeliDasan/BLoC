@@ -29,16 +29,16 @@ class SignUpSuccess extends AuthState {
   List<Object> get props => [];
 }
 
-class PasswordResetFailure extends AuthState {
+class ResetPasswordFailure extends AuthState {
   final String error;
 
-  PasswordResetFailure({required this.error});
+  ResetPasswordFailure({required this.error});
 
   @override
   List<Object> get props => [error];
 }
 
-class PasswordResetSuccess extends AuthState {
+class ResetPasswordSuccess extends AuthState {
   @override
   List<Object> get props => [];
 }

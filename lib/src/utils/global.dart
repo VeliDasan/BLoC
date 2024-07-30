@@ -21,7 +21,7 @@ List<VehicleDetail> vehicleDetailList = [
       latitude: 39.4200 ,
       deviceId: 0,
       km: 132.857,
-      speed: 90),
+      speed: 120),
   VehicleDetail(
       fuelTankLevel: 20,
       longitude: 29,

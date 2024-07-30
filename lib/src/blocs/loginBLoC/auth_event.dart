@@ -24,10 +24,10 @@ class LoginRequested extends AuthEvent {
   List<Object> get props => [email, password];
 }
 
-class PasswordResetRequested extends AuthEvent {
+class ResetPasswordRequested extends AuthEvent {
   final String email;
 
-  PasswordResetRequested({required this.email});
+  ResetPasswordRequested({required this.email});
 
   @override
   List<Object> get props => [email];
