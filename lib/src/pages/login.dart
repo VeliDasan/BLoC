@@ -126,11 +126,13 @@ class Login extends StatelessWidget {
               }
               return ElevatedButton(
                 onPressed: () {
+                  try {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  } catch (e) {}
+
                   final email = _loginEmailController.text;
                   final password = _loginPasswordController.text;
-                  context
-                      .read<AuthBloc>()
-                      .add(LoginRequested(email: email, password: password));
+                  context.read<AuthBloc>().add(LoginRequested(email: email, password: password));
                 },
                 child: const Text('Giriş Yap'),
               );
@@ -184,11 +186,13 @@ class Login extends StatelessWidget {
               }
               return ElevatedButton(
                 onPressed: () {
+                  try {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  } catch (e) {}
+
                   final email = _signUpEmailController.text;
                   final password = _signUpPasswordController.text;
-                  context
-                      .read<AuthBloc>()
-                      .add(SignUpRequested(email: email, password: password));
+                  context.read<AuthBloc>().add(SignUpRequested(email: email, password: password));
                 },
                 child: const Text('Kayıt Ol'),
               );
@@ -227,10 +231,12 @@ class Login extends StatelessWidget {
               }
               return ElevatedButton(
                 onPressed: () {
+                  try {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  } catch (e) {}
+
                   final email = _resetPasswordEmailController.text;
-                  context
-                      .read<AuthBloc>()
-                      .add(ResetPasswordRequested(email: email));
+                  context.read<AuthBloc>().add(ResetPasswordRequested(email: email));
                 },
                 child: const Text('Şifreyi Sıfırla'),
               );
