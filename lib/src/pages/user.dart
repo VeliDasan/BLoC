@@ -21,12 +21,16 @@ class _UserPageState extends State<UserPage> {
   final _emailController = TextEditingController();
   final _oldPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _surnameController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _oldPasswordController.dispose();
     _newPasswordController.dispose();
+    _nameController.dispose();
+    _surnameController.dispose();
     super.dispose();
   }
 
@@ -54,7 +58,7 @@ class _UserPageState extends State<UserPage> {
             if (state is UserDeleted) {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => const Login()),
-                    (route) => false,
+                (route) => false,
               );
             } else if (state is UserInfoUpdated) {
               showDialog(
@@ -70,7 +74,7 @@ class _UserPageState extends State<UserPage> {
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => const Login()),
-                                (route) => false,
+                            (route) => false,
                           );
                         },
                         child: const Text('Tamam'),
@@ -93,7 +97,7 @@ class _UserPageState extends State<UserPage> {
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => const Login()),
-                                (route) => false,
+                            (route) => false,
                           );
                         },
                         child: const Text('Tamam'),
@@ -112,6 +116,12 @@ class _UserPageState extends State<UserPage> {
                 final userInfo = state.userInfo.data() as Map<String, dynamic>?;
 
                 if (userInfo != null) {
+                  // Kullanıcı bilgilerini al ve TextField'ı güncelle
+                  _emailController.text = userInfo['email'] ?? 'N/A';
+                  _nameController.text = userInfo['name'] ?? 'N/A';
+                  _surnameController.text = userInfo['surname'] ?? 'N/A';
+
+
                   return Align(
                     alignment: Alignment.topCenter,
                     child: Card(
@@ -131,11 +141,6 @@ class _UserPageState extends State<UserPage> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                'Email: ${userInfo['email'] ?? 'N/A'}',
-                                style: const TextStyle(
-                                    fontSize: 18.0, color: Colors.white),
-                              ),
                               const SizedBox(height: 4.0),
                               Container(
                                 decoration: BoxDecoration(
@@ -162,14 +167,85 @@ class _UserPageState extends State<UserPage> {
                                     hintText: "Yeni Email Adresinizi Giriniz",
                                     hintStyle: TextStyle(color: Colors.white),
                                     border: InputBorder.none,
-                                    prefixIcon: Icon(Icons.update,
-                                        color: Colors.white),
+                                    prefixIcon:
+                                        Icon(Icons.update, color: Colors.white),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 15.0, horizontal: 20.0),
+                                  ),
+                                ),
+
+
+                              ),
+                              const SizedBox(height: 8.0),
+
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Colors.deepPurple,
+                                      Colors.purpleAccent
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      offset: Offset(0, 2),
+                                      blurRadius: 4.0,
+                                    ),
+                                  ],
+                                ),
+                                child: TextField(
+                                  controller: _nameController,
+                                  obscureText: false,
+                                  decoration: const InputDecoration(
+                                    hintText: "Ad",
+                                    hintStyle: TextStyle(color: Colors.white),
+                                    border: InputBorder.none,
+                                    prefixIcon:
+                                    Icon(Icons.lock, color: Colors.white),
                                     contentPadding: EdgeInsets.symmetric(
                                         vertical: 15.0, horizontal: 20.0),
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 8.0),
+                              SizedBox(height: 8.0),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Colors.deepPurple,
+                                      Colors.purpleAccent
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      offset: Offset(0, 2),
+                                      blurRadius: 4.0,
+                                    ),
+                                  ],
+                                ),
+                                child: TextField(
+                                  controller: _surnameController,
+                                  obscureText: false,
+                                  decoration: const InputDecoration(
+                                    hintText: "soyad",
+                                    hintStyle: TextStyle(color: Colors.white),
+                                    border: InputBorder.none,
+                                    prefixIcon:
+                                    Icon(Icons.lock, color: Colors.white),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 15.0, horizontal: 20.0),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 8.0),
                               Container(
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
@@ -196,7 +272,8 @@ class _UserPageState extends State<UserPage> {
                                     hintText: "Eski Şifrenizi Giriniz",
                                     hintStyle: TextStyle(color: Colors.white),
                                     border: InputBorder.none,
-                                    prefixIcon: Icon(Icons.lock, color: Colors.white),
+                                    prefixIcon:
+                                        Icon(Icons.lock, color: Colors.white),
                                     contentPadding: EdgeInsets.symmetric(
                                         vertical: 15.0, horizontal: 20.0),
                                   ),
@@ -229,7 +306,8 @@ class _UserPageState extends State<UserPage> {
                                     hintText: "Yeni Şifrenizi Giriniz",
                                     hintStyle: TextStyle(color: Colors.white),
                                     border: InputBorder.none,
-                                    prefixIcon: Icon(Icons.lock, color: Colors.white),
+                                    prefixIcon:
+                                        Icon(Icons.lock, color: Colors.white),
                                     contentPadding: EdgeInsets.symmetric(
                                         vertical: 15.0, horizontal: 20.0),
                                   ),
@@ -237,23 +315,28 @@ class _UserPageState extends State<UserPage> {
                               ),
                               const SizedBox(height: 16.0),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   SizedBox(
                                     width: 110,
                                     child: locationButton(
                                       onPressed: () {
                                         final newEmail = _emailController.text;
+                                        final newName= _nameController.text;
+                                        final newSurname= _surnameController.text;
                                         if (newEmail.isNotEmpty) {
                                           final updatedData = {
                                             'email': newEmail,
+                                            'name':newName,
+                                            'surname':newSurname
                                           };
                                           context.read<FirebaseBloc>().add(
-                                            UpdateUserInfoRequested(
-                                              uid: user!.uid,
-                                              data: updatedData,
-                                            ),
-                                          );
+                                                UpdateUserInfoRequested(
+                                                  uid: user!.uid,
+                                                  data: updatedData,
+                                                ),
+                                              );
                                         }
                                       },
                                       title: 'Güncelle',
@@ -264,8 +347,9 @@ class _UserPageState extends State<UserPage> {
                                     child: locationButton(
                                       onPressed: () {
                                         context.read<FirebaseBloc>().add(
-                                          DeleteUserRequested(uid: user!.uid),
-                                        );
+                                              DeleteUserRequested(
+                                                  uid: user!.uid),
+                                            );
                                       },
                                       title: 'Hesabı Sil',
                                     ),
@@ -274,15 +358,18 @@ class _UserPageState extends State<UserPage> {
                                     width: 110,
                                     child: locationButton(
                                       onPressed: () {
-                                        final oldPassword = _oldPasswordController.text;
-                                        final newPassword = _newPasswordController.text;
-                                        if (oldPassword.isNotEmpty && newPassword.isNotEmpty) {
+                                        final oldPassword =
+                                            _oldPasswordController.text;
+                                        final newPassword =
+                                            _newPasswordController.text;
+                                        if (oldPassword.isNotEmpty &&
+                                            newPassword.isNotEmpty) {
                                           context.read<FirebaseBloc>().add(
-                                            UpdatePasswordRequested(
-                                              oldPassword: oldPassword,
-                                              newPassword: newPassword,
-                                            ),
-                                          );
+                                                UpdatePasswordRequested(
+                                                  oldPassword: oldPassword,
+                                                  newPassword: newPassword,
+                                                ),
+                                              );
                                         }
                                       },
                                       title: 'Şifreyi Güncelle',

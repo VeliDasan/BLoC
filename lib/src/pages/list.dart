@@ -1,5 +1,6 @@
 import 'package:bloc_yapisi/src/blocs/weatherBLoC/weather_bloc.dart';
 import 'package:bloc_yapisi/src/blocs/weatherBLoC/weather_state.dart';
+import 'package:bloc_yapisi/src/pages/addVehicle.dart';
 import 'package:bloc_yapisi/src/widgets/list_body.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:bloc_yapisi/src/blocs/listBLoC/list_state.dart';
 import 'package:bloc_yapisi/src/elements/pageLoading.dart';
 import 'package:bloc_yapisi/src/elements/appBar.dart';
 
+import '../elements/addButton.dart';
+
 class ListScreen extends StatefulWidget {
   const ListScreen({super.key});
 
@@ -17,24 +20,14 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-  int limitData = 0;
-
-  int checkLimit() {
-    if (DateTime.now().minute.toInt() % 2 != 0) {
-      limitData = 3;
-    } else {
-      limitData = 5;
-    }
-    print(limitData);
-    return limitData;
-  }
+  int limitData = 4;
 
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
           BlocProvider<ListBloc>(
             create: (context) =>
-                ListBloc()..add(GetListVehicles(limit: checkLimit())),
+                ListBloc()..add(GetListVehicles(limit: limitData)),
           ),
         ],
         child: Scaffold(
@@ -47,22 +40,25 @@ class _ListScreenState extends State<ListScreen> {
                     showDialog(
                         context: context,
                         builder: (context) =>
-                        const AlertDialog(content: Text('HATA')));
+                            const AlertDialog(content: Text('HATA')));
                   } else if (vehicleState is DeleteSuccess) {
                     vehicleContext
                         .read<ListBloc>()
-                        .add(GetListVehicles(limit: checkLimit()));
+                        .add(GetListVehicles(limit: limitData));
                   }
                 },
-                builder: (vehicleContext, vehicleState) => vehicleState
-                is! ListSuccessState
-                    ? pageLoading()
-                    : listScrollList(
-                    vehicleState: vehicleState,
-                    limit: checkLimit(),
-                    onDelete: (index) {
-                      vehicleContext.read<ListBloc>().add(DeleteVehicle(
-                          deviceId: vehicleState.listData[index].id));
-                    })))
-      );
+                builder: (vehicleContext, vehicleState) =>
+                    vehicleState is! ListSuccessState
+                        ? pageLoading()
+                        : listScrollList(
+                            vehicleState: vehicleState,
+                            limit: limitData,
+                            onDelete: (index) {
+                              vehicleContext.read<ListBloc>().add(DeleteVehicle(
+                                  deviceId: vehicleState.listData[index].id));
+                            })),
+          floatingActionButton: addButton(context: context),
+        ),
+
+  );
 }

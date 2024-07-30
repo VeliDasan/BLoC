@@ -12,7 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpRequested>((event, emit) async {
       emit(Loading());
       try {
-        await authRepository.signUp(email: event.email, password: event.password);
+        await authRepository.signUp(email: event.email, password: event.password,name: event.name,surname:event.surname);
         emit(SignUpSuccess());
       } catch (e) {
         emit(UnAuthenticated(error: e.toString()));

@@ -144,6 +144,10 @@ class Login extends StatelessWidget {
   }
 
   Widget _buildSignUpTab(BuildContext context) {
+    final TextEditingController _signUpNameController =
+    TextEditingController();
+    final TextEditingController _signUpSurnameController =
+    TextEditingController();
     final TextEditingController _signUpEmailController =
         TextEditingController();
     final TextEditingController _signUpPasswordController =
@@ -154,6 +158,30 @@ class Login extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          TextField(
+            controller: _signUpNameController,
+            decoration: InputDecoration(
+              labelText: 'Ad',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              filled: true,
+              fillColor: Colors.blue.shade50,
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _signUpSurnameController,
+            decoration: InputDecoration(
+              labelText: 'Soyad',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              filled: true,
+              fillColor: Colors.blue.shade50,
+            ),
+          ),
+          const SizedBox(height: 10),
           TextField(
             controller: _signUpEmailController,
             decoration: InputDecoration(
@@ -192,9 +220,13 @@ class Login extends StatelessWidget {
 
                   final email = _signUpEmailController.text;
                   final password = _signUpPasswordController.text;
-                  context.read<AuthBloc>().add(SignUpRequested(email: email, password: password));
+                  final name = _signUpNameController.text;
+                  final surname = _signUpSurnameController.text;
+                  context.read<AuthBloc>().add(SignUpRequested(email: email, password: password, name: name, surname: surname,));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ListScreen()));
                 },
                 child: const Text('Kayıt Ol'),
+
               );
             },
           ),
