@@ -5,8 +5,26 @@ abstract class WeatherEvent extends Equatable {
 }
 
 class GetWeather extends WeatherEvent {
-  const GetWeather();
+  final String city;
+
+  const GetWeather(this.city);
 
   @override
-  List<dynamic> get props => [];
+  List<Object> get props => [city];
+}
+
+class ToggleSearch extends WeatherEvent {
+  const ToggleSearch();
+
+  @override
+  List<Object> get props => [];
+}
+
+class GetCitySuggestions extends WeatherEvent {
+  final String query;
+
+  const GetCitySuggestions(this.query);
+
+  @override
+  List<Object> get props => [query];
 }

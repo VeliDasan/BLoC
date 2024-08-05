@@ -1,5 +1,5 @@
-import '../../models/vehicleDetail.dart';
 import 'package:equatable/equatable.dart';
+import '../../models/vehicleDetail.dart';
 
 abstract class DetailState extends Equatable {
   const DetailState();
@@ -7,19 +7,19 @@ abstract class DetailState extends Equatable {
 
 class DetailLoadingState extends DetailState {
   @override
-  List<dynamic> get props => [];
+  List<Object> get props => [];
 }
 
 class DetailSuccessState extends DetailState {
-  const DetailSuccessState({required this.vehicleDetailData});
-
   final VehicleDetail vehicleDetailData;
 
+  const DetailSuccessState({required this.vehicleDetailData});
+
   @override
-  List<dynamic> get props => [];
+  List<Object> get props => [vehicleDetailData];
 }
 
 class DetailErrorState extends DetailState {
   @override
-  List<dynamic> get props => [];
+  List<Object> get props => [];
 }

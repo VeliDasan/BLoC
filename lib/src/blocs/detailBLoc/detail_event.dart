@@ -5,10 +5,10 @@ abstract class DetailEvent extends Equatable {
 }
 
 class GetVehicleDetail extends DetailEvent {
-  final int deviceId;
+  final String plate;
 
-  const GetVehicleDetail({required this.deviceId});
+  const GetVehicleDetail({required this.plate});
 
   @override
-  List<dynamic> get props => [];
+  List<Object> get props => [plate];
 }

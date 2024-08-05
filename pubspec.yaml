@@ -16,7 +16,10 @@ dependencies:
   google_maps_flutter:
   kdgaugeview:
   syncfusion_flutter_gauges:
-
+  cloud_firestore:
+  firebase_core:
+  firebase_auth:
+  firebase_messaging:
 dev_dependencies:
   flutter_test:
     sdk: flutter
