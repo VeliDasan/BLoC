@@ -26,6 +26,8 @@ class _AddVehicleState extends State<AddVehicle> {
   final _sensorsController = TextEditingController();
   final _plateController = TextEditingController();
 
+  bool _isActive = true;
+
   @override
   void dispose() {
     _fuelTankLevelController.dispose();
@@ -37,8 +39,6 @@ class _AddVehicleState extends State<AddVehicle> {
     _isActiveController.dispose();
     _sensorsController.dispose();
     _plateController.dispose();
-
-
     super.dispose();
   }
 
@@ -69,12 +69,12 @@ class _AddVehicleState extends State<AddVehicle> {
               padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: _formKey,
-                child: Column(
+                child: ListView(
                   children: [
                     TextFormField(
                       controller: _fuelTankLevelController,
                       decoration: InputDecoration(labelText: 'Fuel Tank Level'),
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter fuel tank level';
@@ -82,10 +82,11 @@ class _AddVehicleState extends State<AddVehicle> {
                         return null;
                       },
                     ),
+                    SizedBox(height: 10),
                     TextFormField(
                       controller: _longitudeController,
                       decoration: InputDecoration(labelText: 'Longitude'),
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter longitude';
@@ -93,10 +94,11 @@ class _AddVehicleState extends State<AddVehicle> {
                         return null;
                       },
                     ),
+                    SizedBox(height: 10),
                     TextFormField(
                       controller: _latitudeController,
                       decoration: InputDecoration(labelText: 'Latitude'),
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter latitude';
@@ -104,10 +106,11 @@ class _AddVehicleState extends State<AddVehicle> {
                         return null;
                       },
                     ),
+                    SizedBox(height: 10),
                     TextFormField(
                       controller: _speedController,
                       decoration: InputDecoration(labelText: 'Speed'),
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter speed';
@@ -115,6 +118,7 @@ class _AddVehicleState extends State<AddVehicle> {
                         return null;
                       },
                     ),
+                    SizedBox(height: 10),
                     TextFormField(
                       controller: _deviceIdController,
                       decoration: InputDecoration(labelText: 'Device ID'),
@@ -126,10 +130,11 @@ class _AddVehicleState extends State<AddVehicle> {
                         return null;
                       },
                     ),
+                    SizedBox(height: 10),
                     TextFormField(
                       controller: _kmController,
                       decoration: InputDecoration(labelText: 'KM'),
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter KM';
@@ -137,16 +142,18 @@ class _AddVehicleState extends State<AddVehicle> {
                         return null;
                       },
                     ),
-                    TextFormField(
-                      controller: _isActiveController,
-                      decoration: InputDecoration(labelText: 'Is Active (true/false)'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter if the vehicle is active';
-                        }
-                        return null;
+                    SizedBox(height: 10),
+                    SwitchListTile(
+                      title: Text('Is Active'),
+                      value: _isActive,
+                      onChanged: (bool value) {
+                        setState(() {
+                          _isActive = value;
+                          _isActiveController.text = value.toString();
+                        });
                       },
                     ),
+                    SizedBox(height: 10),
                     TextFormField(
                       controller: _sensorsController,
                       decoration: InputDecoration(labelText: 'Sensors'),
@@ -158,18 +165,18 @@ class _AddVehicleState extends State<AddVehicle> {
                         return null;
                       },
                     ),
+                    SizedBox(height: 10),
                     TextFormField(
                       controller: _plateController,
                       decoration: InputDecoration(labelText: 'Plate'),
-                      keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter sensors';
+                          return 'Please enter plate number';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -179,9 +186,9 @@ class _AddVehicleState extends State<AddVehicle> {
                           final speed = double.parse(_speedController.text);
                           final deviceId = int.parse(_deviceIdController.text);
                           final km = double.parse(_kmController.text);
-                          final isActive = _isActiveController.text.toLowerCase() == 'true';
+                          final isActive = _isActive;
                           final sensors = int.parse(_sensorsController.text);
-                          final plate =(_plateController.text);
+                          final plate = _plateController.text;
 
                           context.read<AddvehicleBloc>().add(
                             AddVehicleRequsted(
