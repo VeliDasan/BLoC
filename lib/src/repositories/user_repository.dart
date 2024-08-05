@@ -70,5 +70,21 @@ class UserRepository {
     }
   }
 
+  Future<String?> getMessageToken() async {
+    try {
+      String? token = await _firebaseMessaging.getToken();
+      return token;
+    } catch (e) {
+      throw Exception('Error fetching message token: $e');
+    }
+  }
 
+  Future<void> saveMessageToken(String uid, String? token) async {
+    if (token == null) return;
+    try {
+      await collectionKisiler.doc(uid).update({'messageToken': token});
+    } catch (e) {
+      throw Exception('Error saving message token: $e');
+    }
+  }
 }

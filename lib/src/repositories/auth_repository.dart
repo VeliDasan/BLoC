@@ -1,25 +1,27 @@
+import 'package:bloc_yapisi/src/repositories/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final CollectionReference collectionKisiler =
-      FirebaseFirestore.instance.collection("Kisiler");
+  final CollectionReference collectionKisiler = FirebaseFirestore.instance.collection("Kisiler");
+  final UserRepository userRepository = UserRepository();
 
-  Future<void> signUp(
-      {required String email,
-      required String password,
-      required String name,
-      required String surname}) async {
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required String name,
+    required String surname,
+  }) async {
     try {
-      UserCredential userCredential =
-          await _firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
-        password: password
+        password: password,
       );
 
-
-      await addUserToFirestore(userCredential.user?.uid, email,password,name,surname);
+      await addUserToFirestore(userCredential.user?.uid, email, password, name, surname);
+      String? token = await userRepository.getMessageToken();
+      await userRepository.saveMessageToken(userCredential.user?.uid ?? "", token);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw Exception('This password is too weak');
@@ -33,8 +35,12 @@ class AuthRepository {
 
   Future<bool> signIn({required String email, required String password}) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      String? token = await userRepository.getMessageToken();
+      await userRepository.saveMessageToken(userCredential.user?.uid ?? "", token);
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
@@ -51,7 +57,7 @@ class AuthRepository {
       String email,
       String password,
       String name,
-      String surname
+      String surname,
       ) async {
     if (uid == null) return;
 
@@ -66,7 +72,7 @@ class AuthRepository {
       'surname': surname,
       'createdAt': now,
       'loginTimes': FieldValue.arrayUnion([now]),
-    }, SetOptions(merge:true));
+    }, SetOptions(merge: true));
   }
 
   Future<void> resetPassword({required String email}) async {
