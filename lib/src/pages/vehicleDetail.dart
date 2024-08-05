@@ -1,4 +1,3 @@
-import 'package:bloc_yapisi/src/blocs/detailBLoc/detail_state.dart';
 import 'package:bloc_yapisi/src/blocs/mapBLoC/map_bloc.dart';
 import 'package:bloc_yapisi/src/elements/appBar.dart';
 import 'package:bloc_yapisi/src/elements/locationButton.dart';
@@ -8,7 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-import '../repositories/vehicle_repository.dart';
+
+import '../widgets/info_card.dart';
 
 class VehicleDetailScreen extends StatefulWidget {
   final String plate;
@@ -56,9 +56,67 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildInfoCard(
-                      title: 'Plate',
-                      value: vehicle['plate'],
+                    Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.car_rental_sharp, color: Colors.blue),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Plate: ${vehicle['plate']}',
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Icon(Icons.key, color: Colors.deepPurple),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Device ID: ${vehicle['deviceId']}',
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Icon(
+                                  vehicle['isActive']
+                                      ? Icons.check_circle
+                                      : Icons.cancel,
+                                  color: vehicle['isActive']
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Active: ${vehicle['isActive'] ? 'Yes' : 'No'}',
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Icon(Icons.sensors, color: Colors.orange),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Sensors: ${vehicle['sensors']}',
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     Card(
                       elevation: 4,
@@ -91,7 +149,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                               vehicle['latitude'],
                                               vehicle['longitude'],
                                             ),
-                                            infoWindow: const InfoWindow(title: 'Vehicle Location'),
+                                            infoWindow: const InfoWindow(
+                                                title: 'Vehicle Location'),
                                           ),
                                         },
                                       ),
@@ -107,12 +166,16 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                               return locationButton(
                                 onPressed: () {
                                   if (mapState is MapVisibleState) {
-                                    context.read<MapBloc>().add(ToggleMapVisibility(
+                                    context
+                                        .read<MapBloc>()
+                                        .add(ToggleMapVisibility(
                                       latitude: mapState.latitude,
                                       longitude: mapState.longitude,
                                     ));
                                   } else if (mapState is MapHiddenState) {
-                                    context.read<MapBloc>().add(ToggleMapVisibility(
+                                    context
+                                        .read<MapBloc>()
+                                        .add(ToggleMapVisibility(
                                       latitude: vehicle['latitude'],
                                       longitude: vehicle['longitude'],
                                     ));
@@ -122,7 +185,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                     );
                                   }
                                 },
-                                title: mapState is MapVisibleState ? "Konumu Gizle" : "Konuma Git",
+                                title: mapState is MapVisibleState
+                                    ? "Konumu Gizle"
+                                    : "Konuma Git",
                               );
                             },
                           ),
@@ -136,7 +201,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                         height: 400,
                         child: KdGaugeView(
                           minSpeed: 0,
-                          maxSpeed: 250, // Updated with new variable
+                          maxSpeed: 250,
+                          // Updated with new variable
                           speed: vehicle['speed'].toDouble(),
                           animate: true,
                           duration: const Duration(seconds: 1),
@@ -191,18 +257,6 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                         ),
                       ],
                     ),
-                    _buildInfoCard(
-                      title: 'Device ID',
-                      value: '${vehicle['deviceId']}',
-                    ),
-                    _buildInfoCard(
-                      title: 'Active',
-                      value: vehicle['isActive'] ? 'Yes' : 'No',
-                    ),
-                    _buildInfoCard(
-                      title: 'Sensors',
-                      value: '${vehicle['sensors']}',
-                    ),
                   ],
                 ),
               );
@@ -216,38 +270,10 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   }
 
   Future<Map<String, dynamic>> _getVehicleDetails(String plate) async {
-    final doc = await FirebaseFirestore.instance.collection('vehicles').doc(plate).get();
+    final doc = await FirebaseFirestore.instance
+        .collection('vehicles')
+        .doc(plate)
+        .get();
     return doc.data() ?? {};
-  }
-
-  Widget _buildInfoCard({required String title, required String value}) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 16),
-          ),
-        ],
-      ),
-    );
   }
 }

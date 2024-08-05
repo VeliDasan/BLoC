@@ -23,7 +23,6 @@ Widget listScrollList({required Function(int) onDelete}) {
             final plate = vehicles[index];
             return InkWell(
               onTap: () async {
-                // Araç detay sayfasına yönlendir
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
