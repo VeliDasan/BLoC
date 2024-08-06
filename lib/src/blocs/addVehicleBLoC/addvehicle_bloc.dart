@@ -6,10 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddvehicleBloc extends Bloc<AddVehicleEvent, AddVehicleState> {
   final VehicleRepository vehicleRepository;
-  var collectionKisiler = FirebaseFirestore.instance.collection("vehicles");
+  bool isActive = true; // default value
 
-  AddvehicleBloc({required this.vehicleRepository})
-      : super(UnAuthenticated(error: '')) {
+  AddvehicleBloc({required this.vehicleRepository}) : super(UnAuthenticated(error: '')) {
     on<AddVehicleRequsted>((event, emit) async {
       emit(Loading());
       try {
@@ -28,5 +27,19 @@ class AddvehicleBloc extends Bloc<AddVehicleEvent, AddVehicleState> {
         emit(UnAuthenticated(error: e.toString()));
       }
     });
+
+    on<ToggleIsActive>((event, emit) {
+      isActive = event.isActive;
+      emit(IsActiveChanged(isActive: isActive));
+    });
   }
+}
+
+class IsActiveChanged extends AddVehicleState {
+  final bool isActive;
+
+  IsActiveChanged({required this.isActive});
+
+  @override
+  List<Object> get props => [isActive];
 }

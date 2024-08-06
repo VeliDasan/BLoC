@@ -22,11 +22,8 @@ class _AddVehicleState extends State<AddVehicle> {
   final _speedController = TextEditingController();
   final _deviceIdController = TextEditingController();
   final _kmController = TextEditingController();
-  final _isActiveController = TextEditingController();
   final _sensorsController = TextEditingController();
   final _plateController = TextEditingController();
-
-  bool _isActive = true;
 
   @override
   void dispose() {
@@ -36,7 +33,6 @@ class _AddVehicleState extends State<AddVehicle> {
     _speedController.dispose();
     _deviceIdController.dispose();
     _kmController.dispose();
-    _isActiveController.dispose();
     _sensorsController.dispose();
     _plateController.dispose();
     super.dispose();
@@ -65,6 +61,7 @@ class _AddVehicleState extends State<AddVehicle> {
             if (state is Loading) {
               return pageLoading();
             }
+            bool isActive = state is IsActiveChanged ? state.isActive : true;
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
@@ -143,14 +140,16 @@ class _AddVehicleState extends State<AddVehicle> {
                       },
                     ),
                     SizedBox(height: 10),
-                    SwitchListTile(
-                      title: Text('Is Active'),
-                      value: _isActive,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _isActive = value;
-                          _isActiveController.text = value.toString();
-                        });
+                    BlocBuilder<AddvehicleBloc, AddVehicleState>(
+                      builder: (context, state) {
+                        bool isActive = state is IsActiveChanged ? state.isActive : true;
+                        return SwitchListTile(
+                          title: Text('Is Active'),
+                          value: isActive,
+                          onChanged: (bool value) {
+                            context.read<AddvehicleBloc>().add(ToggleIsActive(isActive: value));
+                          },
+                        );
                       },
                     ),
                     SizedBox(height: 10),
@@ -186,7 +185,7 @@ class _AddVehicleState extends State<AddVehicle> {
                           final speed = double.parse(_speedController.text);
                           final deviceId = int.parse(_deviceIdController.text);
                           final km = double.parse(_kmController.text);
-                          final isActive = _isActive;
+                          final isActive = context.read<AddvehicleBloc>().isActive;
                           final sensors = int.parse(_sensorsController.text);
                           final plate = _plateController.text;
 

@@ -40,7 +40,14 @@ class AddVehicleRequsted extends AddVehicleEvent {
       required this.sensors,
       required this.plate});
 }
+class ToggleIsActive extends AddVehicleEvent {
+  final bool isActive;
 
+  ToggleIsActive({required this.isActive});
+
+  @override
+  List<Object> get props => [isActive];
+}
 /*class SaveVehicleRequested extends AddVehicleEvent {
   final String email;
   final String password;
