@@ -1,6 +1,7 @@
 import 'package:bloc_yapisi/src/blocs/mapBLoC/map_bloc.dart';
 import 'package:bloc_yapisi/src/elements/appBar.dart';
 import 'package:bloc_yapisi/src/elements/locationButton.dart';
+import 'package:bloc_yapisi/src/pages/addVehicle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +41,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => MapBloc(),
+
       child: Scaffold(
         appBar: appBar(context: context, title: 'Araç Detayları'),
         body: FutureBuilder(
@@ -72,9 +74,22 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                   'Plate: ${vehicle['plate']}',
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
+                                SizedBox(width: 170),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AddVehicle(vehicleData: vehicle),
+                                      ),
+                                    );
+                                  },
+                                  icon: Icon(Icons.edit_note, color: Colors.redAccent, size: 30),
+                                ),
                               ],
+
                             ),
-                            SizedBox(height: 8),
+
                             Row(
                               children: [
                                 Icon(Icons.key, color: Colors.deepPurple),

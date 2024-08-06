@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../models/vehicleDetail.dart';
+
 abstract class AddVehicleState extends Equatable {
   @override
   List<Object> get props => [];
@@ -41,4 +43,13 @@ class ResetPasswordFailure extends AddVehicleState {
 class ResetPasswordSuccess extends AddVehicleState {
   @override
   List<Object> get props => [];
+}
+
+class VehicleDetailsLoaded extends AddVehicleState {
+  final VehicleDetail vehicle;
+
+  VehicleDetailsLoaded(this.vehicle);
+
+  @override
+  List<Object> get props => [vehicle];
 }

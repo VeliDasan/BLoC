@@ -48,6 +48,15 @@ class ToggleIsActive extends AddVehicleEvent {
   @override
   List<Object> get props => [isActive];
 }
+
+class LoadVehicleDetails extends AddVehicleEvent {
+  final String plate;
+
+  LoadVehicleDetails({required this.plate});
+
+  @override
+  List<Object> get props => [plate];
+}
 /*class SaveVehicleRequested extends AddVehicleEvent {
   final String email;
   final String password;

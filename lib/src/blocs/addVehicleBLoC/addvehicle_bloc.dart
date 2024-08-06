@@ -32,6 +32,16 @@ class AddvehicleBloc extends Bloc<AddVehicleEvent, AddVehicleState> {
       isActive = event.isActive;
       emit(IsActiveChanged(isActive: isActive));
     });
+
+    on<LoadVehicleDetails>((event, emit) async {
+      emit(Loading());
+      try {
+        final vehicle = await vehicleRepository.getVehicleDetail(event.plate);
+        emit(VehicleDetailsLoaded(vehicle));
+      } catch (e) {
+        emit(UnAuthenticated(error: e.toString()));
+      }
+    });
   }
 }
 
