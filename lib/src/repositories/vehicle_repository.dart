@@ -39,6 +39,12 @@ class VehicleRepository {
       return snapshot.docs.map((doc) => doc['plate'] as String).toList();
     });
   }
+  Stream<VehicleDetail> getVehicleDetailStream(String plate) {
+    return collectionVehicles.doc(plate).snapshots().map((snapshot) {
+      final data = snapshot.data() as Map<String, dynamic>;
+      return VehicleDetail.fromFirestore(data);
+    });
+  }
   Future<void> deleteVehicle(String plate) async {
     await collectionVehicles.doc(plate).delete();
   }

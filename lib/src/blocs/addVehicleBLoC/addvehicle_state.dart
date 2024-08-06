@@ -46,10 +46,18 @@ class ResetPasswordSuccess extends AddVehicleState {
 }
 
 class VehicleDetailsLoaded extends AddVehicleState {
-  final VehicleDetail vehicle;
+  final List<String> vehicle;
 
   VehicleDetailsLoaded(this.vehicle);
 
   @override
   List<Object> get props => [vehicle];
+}
+class VehicleDetailError extends AddVehicleState {
+  final String Message;
+
+  VehicleDetailError(this.Message);
+
+  @override
+  List<Object> get props => [Message];
 }

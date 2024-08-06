@@ -57,6 +57,8 @@ class LoadVehicleDetails extends AddVehicleEvent {
   @override
   List<Object> get props => [plate];
 }
+class FetchVehiclesDetail extends AddVehicleEvent {}
+
 /*class SaveVehicleRequested extends AddVehicleEvent {
   final String email;
   final String password;

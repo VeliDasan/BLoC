@@ -10,6 +10,7 @@ import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../widgets/info_card.dart';
+import '../repositories/vehicle_repository.dart'; // Import your VehicleRepository
 
 class VehicleDetailScreen extends StatefulWidget {
   final String plate;
@@ -41,18 +42,20 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => MapBloc(),
-
       child: Scaffold(
         appBar: appBar(context: context, title: 'Araç Detayları'),
-        body: FutureBuilder(
-          future: _getVehicleDetails(widget.plate),
+        body: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('vehicles')
+              .doc(widget.plate)
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (snapshot.hasData) {
-              final vehicle = snapshot.data as Map<String, dynamic>;
+            } else if (snapshot.hasData && snapshot.data!.exists) {
+              final vehicle = snapshot.data!.data() as Map<String, dynamic>;
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -87,9 +90,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                   icon: Icon(Icons.edit_note, color: Colors.redAccent, size: 30),
                                 ),
                               ],
-
                             ),
-
                             Row(
                               children: [
                                 Icon(Icons.key, color: Colors.deepPurple),
@@ -209,41 +210,57 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: SizedBox(
-                        width: 400,
-                        height: 400,
-                        child: KdGaugeView(
-                          minSpeed: 0,
-                          maxSpeed: 250,
-                          // Updated with new variable
-                          speed: vehicle['speed'].toDouble(),
-                          animate: true,
-                          duration: const Duration(seconds: 1),
-                          alertSpeedArray: const [40, 80, 90],
-                          alertColorArray: const [
-                            Colors.orange,
-                            Colors.indigo,
-                            Colors.red
-                          ],
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 150.0),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(Icons.speed),
-                                  Text(
-                                    '${vehicle['km'].toDouble()}',
-                                    style: const TextStyle(fontSize: 20),
-                                  ),
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('vehicles')
+                          .doc(widget.plate)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        } else if (snapshot.hasData && snapshot.data!.exists) {
+                          final vehicle = snapshot.data!.data() as Map<String, dynamic>;
+                          return Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: SizedBox(
+                              width: 400,
+                              height: 400,
+                              child: KdGaugeView(
+                                minSpeed: 0,
+                                maxSpeed: 250,
+                                speed: vehicle['speed'].toDouble(),
+                                animate: true,
+                                duration: const Duration(seconds: 1),
+                                alertSpeedArray: const [40, 80, 90],
+                                alertColorArray: const [
+                                  Colors.orange,
+                                  Colors.indigo,
+                                  Colors.red
                                 ],
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 150.0),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(Icons.speed),
+                                        Text(
+                                          '${vehicle['km'].toDouble()}',
+                                          style: const TextStyle(fontSize: 20),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
+                          );
+                        } else {
+                          return const Center(child: Text('Error loading data.'));
+                        }
+                      },
                     ),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -282,13 +299,5 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         ),
       ),
     );
-  }
-
-  Future<Map<String, dynamic>> _getVehicleDetails(String plate) async {
-    final doc = await FirebaseFirestore.instance
-        .collection('vehicles')
-        .doc(plate)
-        .get();
-    return doc.data() ?? {};
   }
 }
