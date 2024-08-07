@@ -24,6 +24,7 @@ Widget listScrollList({required Function(int) onDelete}) {
             final plate = vehicles[index];
             final details = vehicleDetails[index];
             final sensors = details['sensors'] ?? 0;
+            final speed = details['speed'] ?? 0.0;
 
             return InkWell(
               onTap: () async {
@@ -84,21 +85,33 @@ Widget listScrollList({required Function(int) onDelete}) {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(plate),
-                            if (sensors > 50)
-                              const Tooltip(
-                                message: 'Yüksek Sıcaklık!',
-                                child: Icon(
-                                  Icons.warning,
-                                  color: Colors.red,
-                                ),
-                              ),
-
+                            Row(
+                              children: [
+                                if (sensors > 50)
+                                  const Tooltip(
+                                    message: 'Yüksek Sıcaklık!',
+                                    child: Icon(
+                                      Icons.warning,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                const SizedBox(width: 12),
+                                if (speed > 120)
+                                  const Tooltip(
+                                    message: "Hız 120'den Fazla!",
+                                    child: Icon(
+                                      Icons.speed,
+                                      color: Colors.amber,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ],
+
                         ),
                         const SizedBox(height: 4),
 
-
-
+                        const SizedBox(height: 12),
                       ],
                     ),
                   ),
