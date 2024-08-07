@@ -15,14 +15,21 @@ class AddVehicle extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   AddVehicle({super.key, this.vehicleData}) {
-    _fuelTankLevelController = TextEditingController(text: vehicleData?['fuelTankLevel']?.toString());
-    _longitudeController = TextEditingController(text: vehicleData?['longitude']?.toString());
-    _latitudeController = TextEditingController(text: vehicleData?['latitude']?.toString());
-    _speedController = TextEditingController(text: vehicleData?['speed']?.toString());
-    _deviceIdController = TextEditingController(text: vehicleData?['deviceId']?.toString());
+    _fuelTankLevelController =
+        TextEditingController(text: vehicleData?['fuelTankLevel']?.toString());
+    _longitudeController =
+        TextEditingController(text: vehicleData?['longitude']?.toString());
+    _latitudeController =
+        TextEditingController(text: vehicleData?['latitude']?.toString());
+    _speedController =
+        TextEditingController(text: vehicleData?['speed']?.toString());
+    _deviceIdController =
+        TextEditingController(text: vehicleData?['deviceId']?.toString());
     _kmController = TextEditingController(text: vehicleData?['km']?.toString());
-    _sensorsController = TextEditingController(text: vehicleData?['sensors']?.toString());
-    _plateController = TextEditingController(text: vehicleData?['plate']?.toString());
+    _sensorsController =
+        TextEditingController(text: vehicleData?['sensors']?.toString());
+    _plateController =
+        TextEditingController(text: vehicleData?['plate']?.toString());
   }
 
   late final TextEditingController _fuelTankLevelController;
@@ -37,7 +44,8 @@ class AddVehicle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AddvehicleBloc(vehicleRepository: VehicleRepository()),
+      create: (context) =>
+          AddvehicleBloc(vehicleRepository: VehicleRepository()),
       child: BlocProvider(
         create: (context) => MapBloc(),
         child: GestureDetector(
@@ -63,36 +71,109 @@ class AddVehicle extends StatelessWidget {
                 if (state is Loading) {
                   return pageLoading();
                 }
-                bool isActive = state is IsActiveChanged ? state.isActive : true;
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Form(
                     key: _formKey,
                     child: ListView(
                       children: [
+                        BlocBuilder<AddvehicleBloc, AddVehicleState>(
+                          builder: (context, state) {
+                            bool isActive = state is IsActiveChanged
+                                ? state.isActive
+                                : true;
+
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 55.0),
+                              child: SwitchListTile(
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Icon(
+                                        Icons.key,
+                                        color: Colors.brown[900],
+                                        size: 35,
+                                      ),
+                                    ),
+                                    Text('Kontak Durumu'),
+                                  ],
+                                ),
+                                value: isActive,
+                                activeTrackColor: Colors.green,
+                                inactiveTrackColor: Colors.redAccent,
+                                onChanged: (bool value) {
+                                  context
+                                      .read<AddvehicleBloc>()
+                                      .add(ToggleIsActive(isActive: value));
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                        _buildTextFormField(
+                          controller: _plateController,
+                          labelText: 'Plaka',
+                          keyboardType: TextInputType.text,
+                          validator: (value) => value == null || value.isEmpty
+                              ? 'Please enter plate number'
+                              : null,
+                          icon: Icons.car_crash,
+                          iconColor: Colors.grey,
+                        ),
                         _buildTextFormField(
                           controller: _fuelTankLevelController,
-                          labelText: 'Fuel Tank Level',
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
-                          validator: (value) => value == null || value.isEmpty ? 'Please enter fuel tank level' : null,
+                          labelText: 'Yakıt Seviyesi',
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          validator: (value) => value == null || value.isEmpty
+                              ? 'Please enter fuel tank level'
+                              : null,
+                          icon: Icons.gas_meter,
+                          iconColor: Colors.green,
                         ),
-                        _buildTextFormField(
-                          controller: _longitudeController,
-                          labelText: 'Longitude',
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
-                          validator: (value) => value == null || value.isEmpty ? 'Please enter longitude' : null,
-                        ),
-                        _buildTextFormField(
-                          controller: _latitudeController,
-                          labelText: 'Latitude',
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
-                          validator: (value) => value == null || value.isEmpty ? 'Please enter latitude' : null,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildTextFormField(
+                                controller: _latitudeController,
+                                labelText: 'Enlem',
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                validator: (value) =>
+                                    value == null || value.isEmpty
+                                        ? 'Please enter latitude'
+                                        : null,
+                                icon: Icons.location_on,
+                                iconColor: Colors.blue,
+                              ),
+                            ),
+                            SizedBox(width: 8.0),
+                            Expanded(
+                              child: _buildTextFormField(
+                                controller: _longitudeController,
+                                labelText: 'Boylam',
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                validator: (value) =>
+                                    value == null || value.isEmpty
+                                        ? 'Please enter longitude'
+                                        : null,
+                                icon: Icons.location_on,
+                                iconColor: Colors.blue,
+                              ),
+                            ),
+                          ],
                         ),
                         BlocConsumer<MapBloc, MapState>(
                           listener: (context, mapState) {
                             if (mapState is MapVisibleState) {
-                              _latitudeController.text = mapState.latitude.toString();
-                              _longitudeController.text = mapState.longitude.toString();
+                              _latitudeController.text =
+                                  mapState.latitude.toString();
+                              _longitudeController.text =
+                                  mapState.longitude.toString();
                             } else if (mapState is LocationErrorState) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(mapState.message)),
@@ -102,96 +183,102 @@ class AddVehicle extends StatelessWidget {
                           builder: (context, mapState) {
                             if (mapState is LocationLoadingState) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
                                 child: pageLoading(),
                               );
                             }
-                            return Column(
+                            return Row(
                               children: [
-                                SizedBox(height: 16),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    context.read<MapBloc>().add(FetchLocation());
-                                  },
-                                  child: const Text('Mevcut Konumu Al'),
-                                ),
-                                if (mapState is MapVisibleState)
-                                  const Padding(
-                                    padding: EdgeInsets.all(8.0),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      context
+                                          .read<MapBloc>()
+                                          .add(FetchLocation());
+                                    },
+                                    child: const Text('Mevcut Konumu Al'),
                                   ),
+                                ),
                               ],
                             );
                           },
                         ),
                         _buildTextFormField(
                           controller: _speedController,
-                          labelText: 'Speed',
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
-                          validator: (value) => value == null || value.isEmpty ? 'Please enter speed' : null,
+                          labelText: 'Hız',
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          validator: (value) => value == null || value.isEmpty
+                              ? 'Please enter speed'
+                              : null,
+                          icon: Icons.speed,
+                          iconColor: Colors.orange,
                         ),
                         _buildTextFormField(
                           controller: _deviceIdController,
-                          labelText: 'Device ID',
+                          labelText: 'Cihaz ID',
                           keyboardType: TextInputType.number,
-                          validator: (value) => value == null || value.isEmpty ? 'Please enter device ID' : null,
+                          validator: (value) => value == null || value.isEmpty
+                              ? 'Please enter device ID'
+                              : null,
+                          icon: Icons.devices,
+                          iconColor: Colors.purple,
                         ),
                         _buildTextFormField(
                           controller: _kmController,
                           labelText: 'KM',
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
-                          validator: (value) => value == null || value.isEmpty ? 'Please enter KM' : null,
-                        ),
-                        BlocBuilder<AddvehicleBloc, AddVehicleState>(
-                          builder: (context, state) {
-                            bool isActive = state is IsActiveChanged ? state.isActive : true;
-                            return SwitchListTile(
-                              title: Text('Is Active'),
-                              value: isActive,
-                              onChanged: (bool value) {
-                                context.read<AddvehicleBloc>().add(ToggleIsActive(isActive: value));
-                              },
-                            );
-                          },
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          validator: (value) => value == null || value.isEmpty
+                              ? 'Please enter KM'
+                              : null,
+                          icon: Icons.track_changes,
+                          iconColor: Colors.red,
                         ),
                         _buildTextFormField(
                           controller: _sensorsController,
                           labelText: 'Sensors',
                           keyboardType: TextInputType.number,
-                          validator: (value) => value == null || value.isEmpty ? 'Please enter sensors' : null,
-                        ),
-                        _buildTextFormField(
-                          controller: _plateController,
-                          labelText: 'Plate',
-                          keyboardType: TextInputType.text,
-                          validator: (value) => value == null || value.isEmpty ? 'Please enter plate number' : null,
+                          validator: (value) => value == null || value.isEmpty
+                              ? 'Please enter sensors'
+                              : null,
+                          icon: Icons.sensors,
+                          iconColor: Colors.teal,
                         ),
                         SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              final fuelTankLevel = double.parse(_fuelTankLevelController.text);
-                              final longitude = double.parse(_longitudeController.text);
-                              final latitude = double.parse(_latitudeController.text);
+                              final fuelTankLevel =
+                                  double.parse(_fuelTankLevelController.text);
+                              final longitude =
+                                  double.parse(_longitudeController.text);
+                              final latitude =
+                                  double.parse(_latitudeController.text);
                               final speed = double.parse(_speedController.text);
-                              final deviceId = int.parse(_deviceIdController.text);
+                              final deviceId =
+                                  int.parse(_deviceIdController.text);
                               final km = int.parse(_kmController.text);
-                              final isActive = context.read<AddvehicleBloc>().isActive;
-                              final sensors = int.parse(_sensorsController.text);
+                              final isActive =
+                                  context.read<AddvehicleBloc>().isActive;
+                              final sensors =
+                                  int.parse(_sensorsController.text);
                               final plate = _plateController.text;
 
                               context.read<AddvehicleBloc>().add(
-                                AddVehicleRequsted(
-                                  fuelTankLevel: fuelTankLevel,
-                                  longitude: longitude,
-                                  latitude: latitude,
-                                  speed: speed,
-                                  deviceId: deviceId,
-                                  km: km,
-                                  isActive: isActive,
-                                  sensors: sensors,
-                                  plate: plate,
-                                ),
-                              );
+                                    AddVehicleRequsted(
+                                      fuelTankLevel: fuelTankLevel,
+                                      longitude: longitude,
+                                      latitude: latitude,
+                                      speed: speed,
+                                      deviceId: deviceId,
+                                      km: km,
+                                      isActive: isActive,
+                                      sensors: sensors,
+                                      plate: plate,
+                                    ),
+                                  );
                             }
                           },
                           child: Text('Kaydet'),
@@ -213,12 +300,17 @@ class AddVehicle extends StatelessWidget {
     required String labelText,
     required TextInputType keyboardType,
     required String? Function(String?) validator,
+    required IconData icon,
+    required Color iconColor,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: TextFormField(
         controller: controller,
-        decoration: InputDecoration(labelText: labelText),
+        decoration: InputDecoration(
+          labelText: labelText,
+          prefixIcon: Icon(icon, color: iconColor),
+        ),
         keyboardType: keyboardType,
         validator: validator,
       ),
