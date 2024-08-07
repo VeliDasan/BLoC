@@ -69,15 +69,19 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
+                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Icon(Icons.car_rental_sharp, color: Colors.blue),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Plate: ${vehicle['plate']}',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                Row(
+                                  children: [
+                                    Icon(Icons.car_rental_sharp, color: Colors.blue),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Plate: ${vehicle['plate']}',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(width: 170),
+
                                 IconButton(
                                   onPressed: () {
                                     Navigator.push(
@@ -240,14 +244,14 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                   Colors.red
                                 ],
                                 child: Padding(
-                                  padding: const EdgeInsets.only(top: 150.0),
+                                  padding: const EdgeInsets.only(top: 110.0),
                                   child: Center(
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         const Icon(Icons.speed),
                                         Text(
-                                          '${vehicle['km'].toDouble()}',
+                                          '${vehicle['km'].toString()}',
                                           style: const TextStyle(fontSize: 20),
                                         ),
                                       ],

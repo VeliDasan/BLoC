@@ -174,7 +174,7 @@ class AddVehicle extends StatelessWidget {
                               final latitude = double.parse(_latitudeController.text);
                               final speed = double.parse(_speedController.text);
                               final deviceId = int.parse(_deviceIdController.text);
-                              final km = double.parse(_kmController.text);
+                              final km = int.parse(_kmController.text);
                               final isActive = context.read<AddvehicleBloc>().isActive;
                               final sensors = int.parse(_sensorsController.text);
                               final plate = _plateController.text;
