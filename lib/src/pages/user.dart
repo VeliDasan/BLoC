@@ -1,15 +1,14 @@
-import 'package:bloc_yapisi/src/elements/pageLoading.dart';
-import 'package:bloc_yapisi/src/pages/login.dart';
-import 'package:bloc_yapisi/src/repositories/user_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bloc_yapisi/src/blocs/firebaseBLoC/firebase_bloc.dart';
 import 'package:bloc_yapisi/src/blocs/firebaseBLoC/firebase_event.dart';
 import 'package:bloc_yapisi/src/blocs/firebaseBLoC/firebase_state.dart';
+import 'package:bloc_yapisi/src/repositories/user_repository.dart';
+import 'package:bloc_yapisi/src/elements/pageLoading.dart';
+import 'package:bloc_yapisi/src/pages/login.dart';
 import 'package:bloc_yapisi/src/elements/locationButton.dart';
 import 'package:bloc_yapisi/src/utils/global.dart';
-
 import '../widgets/build_text.dart';
 
 class UserPage extends StatefulWidget {
@@ -34,6 +33,79 @@ class _UserPageState extends State<UserPage> {
     _nameController.dispose();
     _surnameController.dispose();
     super.dispose();
+  }
+
+  void _showUpdatePasswordDialog(BuildContext context) {
+    final firebaseBloc = BlocProvider.of<FirebaseBloc>(context, listen: false);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Kullanıcı, dialog dışında bir yere tıklayarak dialog'u kapatamaz.
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Şifre Güncelle'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildTextFormField(
+                  controller: _oldPasswordController,
+                  obscureText: true,
+                  labelText: "Eski Şifrenizi Giriniz",
+                  keyboardType: TextInputType.visiblePassword,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Eski şifre boş olamaz';
+                    }
+                    return null;
+                  },
+                  icon: Icons.lock,
+                  iconColor: Colors.red,
+                ),
+                buildTextFormField(
+                  controller: _newPasswordController,
+                  labelText: "Yeni Şifrenizi Giriniz",
+                  obscureText: true,
+                  keyboardType: TextInputType.visiblePassword,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Yeni şifre boş olamaz';
+                    }
+                    return null;
+                  },
+                  icon: Icons.lock,
+                  iconColor: Colors.red,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                final oldPassword = _oldPasswordController.text;
+                final newPassword = _newPasswordController.text;
+                if (oldPassword.isNotEmpty && newPassword.isNotEmpty) {
+                  firebaseBloc.add(
+                    UpdatePasswordRequested(
+                      oldPassword: oldPassword,
+                      newPassword: newPassword,
+                    ),
+                  );
+                  Navigator.of(context).pop(); // Dialog'u kapatır.
+                }
+              },
+              child: const Text('Şifreyi Güncelle'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Dialog'u kapatır.
+              },
+              child: const Text('İptal'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -170,86 +242,49 @@ class _UserPageState extends State<UserPage> {
                             icon: Icons.person,
                             iconColor: Colors.green,
                           ),
-                          buildTextFormField(
-                            controller: _oldPasswordController,
-                            obscureText: true,
-                            labelText: "Eski Şifrenizi Giriniz",
-                            keyboardType: TextInputType.visiblePassword,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Eski şifre boş olamaz';
-                              }
-                              return null;
-                            },
-                            icon: Icons.lock,
-                            iconColor: Colors.red,
-                          ),
-                          buildTextFormField(
-                            controller: _newPasswordController,
-                            labelText: "Yeni Şifrenizi Giriniz",
-                            obscureText: true,
-                            keyboardType: TextInputType.visiblePassword,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Yeni şifre boş olamaz';
-                              }
-                              return null;
-                            },
-                            icon: Icons.lock,
-                            iconColor: Colors.red,
-                          ),
                           const SizedBox(height: 16.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              locationButton(
-                                onPressed: () {
-                                  final newEmail = _emailController.text;
-                                  final newName = _nameController.text;
-                                  final newSurname = _surnameController.text;
-                                  if (newEmail.isNotEmpty) {
-                                    final updatedData = {
-                                      'email': newEmail,
-                                      'name': newName,
-                                      'surname': newSurname
-                                    };
+                          Expanded(
+                            child: ListView(
+                              children: [
+                                ListTile(
+                                  leading: Icon(Icons.update, color: Colors.orange),
+                                  title: Text('Güncelle'),
+                                  onTap: () {
+                                    final newEmail = _emailController.text;
+                                    final newName = _nameController.text;
+                                    final newSurname = _surnameController.text;
+                                    if (newEmail.isNotEmpty) {
+                                      final updatedData = {
+                                        'email': newEmail,
+                                        'name': newName,
+                                        'surname': newSurname
+                                      };
+                                      context.read<FirebaseBloc>().add(
+                                        UpdateUserInfoRequested(
+                                          uid: user!.uid,
+                                          data: updatedData,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+
+                                ListTile(
+                                  leading: Icon(Icons.lock, color: Colors.purple),
+                                  title: Text('Şifreyi Güncelle'),
+                                  onTap: () => _showUpdatePasswordDialog(context),
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.delete, color: Colors.red),
+                                  title: Text('Hesabı Sil'),
+                                  onTap: () {
                                     context.read<FirebaseBloc>().add(
-                                      UpdateUserInfoRequested(
-                                        uid: user!.uid,
-                                        data: updatedData,
-                                      ),
+                                      DeleteUserRequested(uid: user!.uid),
                                     );
-                                  }
-                                },
-                                title: 'Güncelle',
-                              ),
-                              locationButton(
-                                onPressed: () {
-                                  context.read<FirebaseBloc>().add(
-                                    DeleteUserRequested(uid: user!.uid),
-                                  );
-                                },
-                                title: 'Hesabı Sil',
-                              ),
-                              locationButton(
-                                onPressed: () {
-                                  final oldPassword =
-                                      _oldPasswordController.text;
-                                  final newPassword =
-                                      _newPasswordController.text;
-                                  if (oldPassword.isNotEmpty &&
-                                      newPassword.isNotEmpty) {
-                                    context.read<FirebaseBloc>().add(
-                                      UpdatePasswordRequested(
-                                        oldPassword: oldPassword,
-                                        newPassword: newPassword,
-                                      ),
-                                    );
-                                  }
-                                },
-                                title: 'Şifreyi Güncelle',
-                              ),
-                            ],
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
