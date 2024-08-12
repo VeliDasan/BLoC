@@ -108,6 +108,43 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
+  void _showDeleteUserDialog(BuildContext context) {
+    final firebaseBloc = BlocProvider.of<FirebaseBloc>(context, listen: false);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Hesap Silme Onayı'),
+          content: const Text('Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.'),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                final user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  firebaseBloc.add(
+                    DeleteUserRequested(uid: user.uid),
+                  );
+                }
+              },
+              child: const Text('Evet, Sil'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('İptal'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -313,13 +350,11 @@ class _UserPageState extends State<UserPage> {
                                   ],
                                 ),
                               ),
-                              onTap: () {
-                                context.read<FirebaseBloc>().add(
-                                  DeleteUserRequested(uid: user!.uid),
-                                );
-                              },
+                              onTap: () => _showDeleteUserDialog(context),
                             ),
                           )
+
+
 
                         ],
                       ),
