@@ -9,7 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-import '../utils/generateVehiclePdf.dart';
+import '../repositories/pdf_repository.dart';
 
 class VehicleDetailScreen extends StatefulWidget {
   final String plate;
@@ -57,6 +57,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               final vehicle = snapshot.data!.data() as Map<String, dynamic>;
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -99,6 +100,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 1),
                             Row(
                               children: [
                                 Icon(Icons.key, color: Colors.deepPurple),
@@ -111,7 +113,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 8),
+                            SizedBox(height: 12),
                             Row(
                               children: [
                                 Icon(
@@ -131,16 +133,21 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 8),
+                            SizedBox(height: 1),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Icon(Icons.sensors, color: Colors.orange),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Sensors: ${vehicle['sensors']}',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                Row(
+                                  children: [
+                                    Icon(Icons.sensors, color: Colors.orange),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Sensors: ${vehicle['sensors']}',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
                                 IconButton(
                                   onPressed: () async {
@@ -148,7 +155,11 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                         snapshot.data!.exists) {
                                       final vehicle = snapshot.data!.data()
                                           as Map<String, dynamic>;
-                                      await generateVehiclePdf(vehicle);
+
+                                      String imagePath = 'seyir.png';
+
+                                      await generateVehiclePdf(
+                                          vehicle, imagePath);
                                     } else {
                                       print('Arac Verisi Bulunamadı.');
                                     }

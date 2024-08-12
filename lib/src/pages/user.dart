@@ -60,7 +60,7 @@ class _UserPageState extends State<UserPage> {
                     return null;
                   },
                   icon: Icons.lock,
-                  iconColor: Colors.red,
+                  iconColor: Colors.purple,
                 ),
                 buildTextFormField(
                   controller: _newPasswordController,
@@ -74,7 +74,7 @@ class _UserPageState extends State<UserPage> {
                     return null;
                   },
                   icon: Icons.lock,
-                  iconColor: Colors.red,
+                  iconColor: Colors.purple,
                 ),
               ],
             ),
@@ -243,49 +243,84 @@ class _UserPageState extends State<UserPage> {
                             iconColor: Colors.green,
                           ),
                           const SizedBox(height: 16.0),
-                          Expanded(
-                            child: ListView(
-                              children: [
-                                ListTile(
-                                  leading: Icon(Icons.update, color: Colors.orange),
-                                  title: Text('Güncelle'),
-                                  onTap: () {
-                                    final newEmail = _emailController.text;
-                                    final newName = _nameController.text;
-                                    final newSurname = _surnameController.text;
-                                    if (newEmail.isNotEmpty) {
-                                      final updatedData = {
-                                        'email': newEmail,
-                                        'name': newName,
-                                        'surname': newSurname
-                                      };
-                                      context.read<FirebaseBloc>().add(
-                                        UpdateUserInfoRequested(
-                                          uid: user!.uid,
-                                          data: updatedData,
-                                        ),
-                                      );
-                                    }
-                                  },
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.only(right: 8.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.blueAccent, width: 1.0),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(Icons.update, color: Colors.orange),
+                                    title: Text('Güncelle'),
+                                    onTap: () {
+                                      final newEmail = _emailController.text;
+                                      final newName = _nameController.text;
+                                      final newSurname = _surnameController.text;
+                                      if (newEmail.isNotEmpty) {
+                                        final updatedData = {
+                                          'email': newEmail,
+                                          'name': newName,
+                                          'surname': newSurname
+                                        };
+                                        context.read<FirebaseBloc>().add(
+                                          UpdateUserInfoRequested(
+                                            uid: user!.uid,
+                                            data: updatedData,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ),
-
-                                ListTile(
-                                  leading: Icon(Icons.lock, color: Colors.purple),
-                                  title: Text('Şifreyi Güncelle'),
-                                  onTap: () => _showUpdatePasswordDialog(context),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.only(left: 8.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.blueAccent, width: 1.0),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(Icons.lock, color: Colors.purple),
+                                    title: Text('Şifreyi Güncelle'),
+                                    onTap: () => _showUpdatePasswordDialog(context),
+                                  ),
                                 ),
-                                ListTile(
-                                  leading: Icon(Icons.delete, color: Colors.red),
-                                  title: Text('Hesabı Sil'),
-                                  onTap: () {
-                                    context.read<FirebaseBloc>().add(
-                                      DeleteUserRequested(uid: user!.uid),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
+                          const SizedBox(height: 16.0),
+                          Container(
+                            margin: const EdgeInsets.only(top: 8.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.redAccent, width: 1.0),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: const Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.delete, color: Colors.red),
+                                    SizedBox(width: 8.0),
+                                    Text('Hesabı Sil'),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                context.read<FirebaseBloc>().add(
+                                  DeleteUserRequested(uid: user!.uid),
+                                );
+                              },
+                            ),
+                          )
+
                         ],
                       ),
                     );
