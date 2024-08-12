@@ -51,7 +51,7 @@ class VehicleRepository {
       if (snapshot.exists) {
         return snapshot.data() as Map<String, dynamic>;
       } else {
-        return {}; // Return an empty map if the document doesn't exist
+        return {};
       }
     });
   }
