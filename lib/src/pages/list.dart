@@ -1,3 +1,4 @@
+import 'package:bloc_yapisi/src/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/listBLoC/list_bloc.dart';
@@ -22,6 +23,7 @@ class _ListScreenState extends State<ListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context: context, title: "Liste"),
+      backgroundColor: bodyBackground,
       body: BlocProvider(
         create: (context) => ListBloc(VehicleRepository())..add(FetchVehicles()),
         child: listScrollList(

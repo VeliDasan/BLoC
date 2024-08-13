@@ -1,6 +1,6 @@
 import 'package:bloc_yapisi/src/pages/user.dart';
 import 'package:bloc_yapisi/src/pages/weathersearch.dart';
-import 'package:bloc_yapisi/src/pages/login.dart'; // Login sayfasının importu
+import 'package:bloc_yapisi/src/pages/login.dart';
 import 'package:flutter/material.dart';
 import '../utils/global.dart';
 
@@ -20,7 +20,7 @@ PreferredSizeWidget appBar({
                     builder: (context) => const Weathersearch()
                 ));
           },
-          icon: const Icon(Icons.wind_power_rounded, color: Colors.blue),
+          icon: const Icon(Icons.wind_power_rounded, color: Color(0xFF4a4b65)),
         ),
         IconButton(
           onPressed: () {
@@ -30,7 +30,7 @@ PreferredSizeWidget appBar({
                     builder: (context) => const UserPage()
                 ));
           },
-          icon: const Icon(Icons.person, color: Colors.blue),
+          icon: const Icon(Icons.person, color: Color(0xFF4a4b65)),
         ),
         IconButton(
           onPressed: () {
@@ -40,7 +40,7 @@ PreferredSizeWidget appBar({
                     builder: (context) => const Login()
                 ));
           },
-          icon: const Icon(Icons.exit_to_app, color: Colors.red),
+          icon: const Icon(Icons.exit_to_app, color: Colors.white),
         ),
       ],
       elevation: 0,

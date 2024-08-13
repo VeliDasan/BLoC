@@ -1,3 +1,4 @@
+import 'package:bloc_yapisi/src/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -56,6 +57,7 @@ class AddVehicle extends StatelessWidget {
           },
           child: Scaffold(
             appBar: appBar(context: context, title: "Araç Kayıt"),
+            backgroundColor: bodyBackground,
             body: BlocConsumer<AddvehicleBloc, AddVehicleState>(
               listener: (context, state) {
                 if (state is AddVehicleSuccess) {
@@ -199,7 +201,10 @@ class AddVehicle extends StatelessWidget {
                                           .read<MapBloc>()
                                           .add(FetchLocation());
                                     },
-                                    child: const Text('Mevcut Konumu Al'),
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xFF4a4b65)
+                                    ),
+                                    child: const Text('Mevcut Konumu Al',style: TextStyle(color:Colors.white)),
                                   ),
                                 ),
                               ],
@@ -283,7 +288,10 @@ class AddVehicle extends StatelessWidget {
                                   );
                             }
                           },
-                          child: Text('Kaydet'),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF4a4b65)
+                          ),
+                          child: const Text('Kaydet',style: TextStyle(color:Colors.white)),
                         ),
                       ],
                     ),

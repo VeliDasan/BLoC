@@ -12,7 +12,7 @@ import '../pages/addVehicle.dart';
                 MaterialPageRoute(builder: (context) => AddVehicle()));
           },
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent),
+            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF0c3143)),
           ),
           child: const Icon(
             Icons.add,

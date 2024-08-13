@@ -47,6 +47,7 @@ class _WeathersearchContentState extends State<WeathersearchContent> {
             ),
             centerTitle: true,
             backgroundColor: appBarBackgroundColor),
+        backgroundColor: bodyBackground,
         body: GestureDetector(
           onTap: () {
             FocusManager.instance.primaryFocus?.unfocus();
@@ -59,7 +60,7 @@ class _WeathersearchContentState extends State<WeathersearchContent> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.0),
                     gradient: const LinearGradient(
-                      colors: [Colors.indigo, Colors.blueAccent],
+                      colors: [Color(0xFF0c3143), Color(0xFF4a4b65)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),

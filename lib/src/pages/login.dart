@@ -32,9 +32,11 @@ class Login extends StatelessWidget {
               elevation: 0,
               title: const Text(
                 "Giriş",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold,color: Color(0xFF0c3143)),
               ),
               bottom: const TabBar(
+                labelColor: Colors.white,
+                unselectedLabelColor: Color(0xFF0c3143),
                 tabs: [
                   Tab(text: 'Giriş Yap'),
                   Tab(text: 'Kayıt Ol'),
@@ -42,6 +44,7 @@ class Login extends StatelessWidget {
                 ],
               ),
             ),
+            backgroundColor: bodyBackground,
             body: GestureDetector(
               onTap: () {
                 FocusManager.instance.primaryFocus?.unfocus();
@@ -77,12 +80,25 @@ class Login extends StatelessWidget {
                   }
                 },
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TabBarView(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
                     children: [
-                      buildLoginTab(context),
-                      buildSignUpTab(context),
-                      buildResetPasswordTab(context),
+                      Image.asset(
+                        'assets/images/seyir.png',
+                        height: 150,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: TabBarView(
+                            children: [
+                              buildLoginTab(context),
+                              buildSignUpTab(context),
+                              buildResetPasswordTab(context),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

@@ -168,6 +168,7 @@ class _UserPageState extends State<UserPage> {
             centerTitle: true,
             backgroundColor: appBarBackgroundColor,
           ),
+          backgroundColor: bodyBackground,
           body: BlocListener<FirebaseBloc, FirebaseState>(
             listener: (context, state) {
               if (state is UserDeleted) {

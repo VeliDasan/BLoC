@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/loginBLoC/auth_bloc.dart';
-import '../blocs/loginBLoC/auth_event.dart';
-import '../blocs/loginBLoC/auth_state.dart';
+import 'package:bloc_yapisi/src/blocs/loginBLoC/auth_bloc.dart';
+import 'package:bloc_yapisi/src//blocs/loginBLoC/auth_event.dart';
+import 'package:bloc_yapisi/src/blocs/loginBLoC/auth_state.dart';
 import '../elements/pageLoading.dart';
-import '../pages/list.dart';
 
 Widget buildSignUpTab(BuildContext context) {
   final TextEditingController _signUpNameController =
@@ -31,7 +30,7 @@ Widget buildSignUpTab(BuildContext context) {
               borderRadius: BorderRadius.circular(12.0),
             ),
             filled: true,
-            fillColor: Colors.blue.shade50,
+            fillColor: Colors.white,
           ),
         ),
         const SizedBox(height: 10),
@@ -43,7 +42,7 @@ Widget buildSignUpTab(BuildContext context) {
               borderRadius: BorderRadius.circular(12.0),
             ),
             filled: true,
-            fillColor: Colors.blue.shade50,
+            fillColor: Colors.white,
           ),
         ),
         const SizedBox(height: 10),
@@ -55,7 +54,7 @@ Widget buildSignUpTab(BuildContext context) {
               borderRadius: BorderRadius.circular(12.0),
             ),
             filled: true,
-            fillColor: Colors.blue.shade50,
+            fillColor: Colors.white,
           ),
         ),
         const SizedBox(height: 10),
@@ -67,7 +66,7 @@ Widget buildSignUpTab(BuildContext context) {
               borderRadius: BorderRadius.circular(12.0),
             ),
             filled: true,
-            fillColor: Colors.blue.shade50,
+            fillColor: Colors.white,
           ),
           obscureText: true,
         ),
@@ -89,7 +88,10 @@ Widget buildSignUpTab(BuildContext context) {
                 final surname = _signUpSurnameController.text;
                 context.read<AuthBloc>().add(SignUpRequested(email: email, password: password, name: name, surname: surname,));
               },
-              child: const Text('Kayıt Ol'),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF4a4b65)
+              ),
+              child: const Text('Kayıt Ol',style: TextStyle(color: Colors.white)),
 
             );
           },

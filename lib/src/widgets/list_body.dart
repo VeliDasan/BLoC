@@ -9,7 +9,7 @@ Widget listScrollList({required Function(int) onDelete}) {
   return BlocBuilder<ListBloc, ListState>(
     builder: (context, state) {
       if (state is ListLoading) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       } else if (state is ListLoaded) {
         final vehicles = state.plates;
         final vehicleDetails = state.vehicleDetails;
@@ -67,7 +67,7 @@ Widget listScrollList({required Function(int) onDelete}) {
                   margin: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
+                    color: const Color(0xFF0c3143),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.15),
@@ -84,7 +84,7 @@ Widget listScrollList({required Function(int) onDelete}) {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(plate),
+                            Text(plate,style: const TextStyle(color: Colors.white),),
                             Row(
                               children: [
                                 if (sensors > 50)

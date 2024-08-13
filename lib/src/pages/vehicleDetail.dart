@@ -2,6 +2,7 @@ import 'package:bloc_yapisi/src/blocs/mapBLoC/map_bloc.dart';
 import 'package:bloc_yapisi/src/elements/appBar.dart';
 import 'package:bloc_yapisi/src/elements/locationButton.dart';
 import 'package:bloc_yapisi/src/pages/addVehicle.dart';
+import 'package:bloc_yapisi/src/utils/global.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,6 +44,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       create: (context) => MapBloc(),
       child: Scaffold(
         appBar: appBar(context: context, title: 'Araç Detayları'),
+        backgroundColor: bodyBackground,
         body: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
               .collection('vehicles')
@@ -62,6 +64,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Card(
+                      color: Colors.white70,
                       elevation: 4,
                       margin: const EdgeInsets.symmetric(vertical: 10),
                       child: Padding(
@@ -74,12 +77,12 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.car_rental_sharp,
+                                    const Icon(Icons.car_rental_sharp,
                                         color: Colors.blue),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     Text(
                                       'Plate: ${vehicle['plate']}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -95,25 +98,25 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                       ),
                                     );
                                   },
-                                  icon: Icon(Icons.edit_note,
+                                  icon: const Icon(Icons.edit_note,
                                       color: Colors.redAccent, size: 30),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 1),
+                            const SizedBox(height: 1),
                             Row(
                               children: [
-                                Icon(Icons.key, color: Colors.deepPurple),
-                                SizedBox(width: 8),
+                                const Icon(Icons.key, color: Colors.deepPurple),
+                                const SizedBox(width: 8),
                                 Text(
                                   'Device ID: ${vehicle['deviceId']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                             Row(
                               children: [
                                 Icon(
@@ -124,26 +127,26 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                       ? Colors.green
                                       : Colors.red,
                                 ),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 Text(
                                   'Active: ${vehicle['isActive'] ? 'Yes' : 'No'}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 1),
+                            const SizedBox(height: 1),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.sensors, color: Colors.orange),
-                                    SizedBox(width: 8),
+                                    const Icon(Icons.sensors, color: Colors.orange),
+                                    const SizedBox(width: 8),
                                     Text(
                                       'Sensors: ${vehicle['sensors']}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -164,7 +167,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                       print('Arac Verisi Bulunamadı.');
                                     }
                                   },
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.picture_as_pdf,
                                     color: Colors.blueAccent,
                                     size: 30,
@@ -177,6 +180,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                       ),
                     ),
                     Card(
+                      color: Colors.white70,
                       elevation: 4,
                       margin: const EdgeInsets.symmetric(vertical: 10),
                       child: Column(
@@ -280,10 +284,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                 speed: vehicle['speed'].toDouble(),
                                 animate: true,
                                 duration: const Duration(seconds: 1),
-                                alertSpeedArray: const [40, 80, 90],
+                                alertSpeedArray: const [42],
                                 alertColorArray: const [
-                                  Colors.orange,
-                                  Colors.indigo,
                                   Colors.red
                                 ],
                                 child: Padding(
