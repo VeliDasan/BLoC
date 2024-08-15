@@ -17,7 +17,7 @@ class _CaneditvehicleState extends State<Caneditvehicle> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context: context, title: "Admin Araç Düzenleme"),
+      appBar: appBar(context: context, title: "Admin Araç Düzenleme",isBack: true),
       body: StreamBuilder<QuerySnapshot>(
         stream: collectionVehicles.snapshots(),
         builder: (context, snapshot) {

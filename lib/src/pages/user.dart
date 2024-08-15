@@ -7,7 +7,6 @@ import 'package:bloc_yapisi/src/blocs/firebaseBLoC/firebase_state.dart';
 import 'package:bloc_yapisi/src/repositories/user_repository.dart';
 import 'package:bloc_yapisi/src/elements/pageLoading.dart';
 import 'package:bloc_yapisi/src/pages/login.dart';
-import 'package:bloc_yapisi/src/elements/locationButton.dart';
 import 'package:bloc_yapisi/src/utils/global.dart';
 import '../widgets/build_text.dart';
 
@@ -40,7 +39,7 @@ class _UserPageState extends State<UserPage> {
 
     showDialog(
       context: context,
-      barrierDismissible: false, // Kullanıcı, dialog dışında bir yere tıklayarak dialog'u kapatamaz.
+      barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
           title: const Text('Şifre Güncelle'),
@@ -91,7 +90,7 @@ class _UserPageState extends State<UserPage> {
                       newPassword: newPassword,
                     ),
                   );
-                  Navigator.of(context).pop(); // Dialog'u kapatır.
+                  Navigator.of(context).pop();
                 }
               },
               child: const Text('Şifreyi Güncelle'),

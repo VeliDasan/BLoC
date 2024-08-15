@@ -56,7 +56,7 @@ class AddVehicle extends StatelessWidget {
             FocusManager.instance.primaryFocus?.unfocus();
           },
           child: Scaffold(
-            appBar: appBar(context: context, title: "Araç Kayıt"),
+            appBar: appBar(context: context, title: "Araç Kayıt", isBack: true),
             backgroundColor: bodyBackground,
             body: BlocConsumer<AddvehicleBloc, AddVehicleState>(
               listener: (context, state) {

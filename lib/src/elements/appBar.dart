@@ -7,10 +7,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../utils/global.dart';
 
-PreferredSizeWidget appBar({
-  required BuildContext context,
-  required String title,
-}) {
+PreferredSizeWidget appBar(
+    {required BuildContext context,
+    required String title,
+    required bool isBack}) {
   final String? uid = FirebaseAuth.instance.currentUser?.uid;
 
   return PreferredSize(
@@ -23,22 +23,30 @@ PreferredSizeWidget appBar({
         int? authorityLevel = snapshot.data;
 
         return AppBar(
-          centerTitle: true,
+          centerTitle: false,
           backgroundColor: appBarBackgroundColor,
-          leading: authorityLevel == 1
+          leading: isBack
               ? IconButton(
-                  icon: const Icon(Icons.account_tree_sharp,
+                  icon: const Icon(Icons.arrow_back_ios_rounded,
                       color: Color(0xFF4a4b65)),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Adminpanel(),
-                      ),
-                    );
+                    Navigator.pop(context);
                   },
                 )
-              : null,
+              : authorityLevel == 1
+                  ? IconButton(
+                      icon: const Icon(Icons.account_tree_sharp,
+                          color: Color(0xFF4a4b65)),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Adminpanel(),
+                          ),
+                        );
+                      },
+                    )
+                  : null,
           actions: [
             IconButton(
               onPressed: () {
@@ -64,7 +72,8 @@ PreferredSizeWidget appBar({
               icon: const Icon(Icons.person, color: Color(0xFF4a4b65)),
             ),
             IconButton(
-              onPressed: () {
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -78,7 +87,7 @@ PreferredSizeWidget appBar({
           elevation: 0,
           title: Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
           ),
         );
       },

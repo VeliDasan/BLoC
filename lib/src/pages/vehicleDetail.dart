@@ -40,10 +40,11 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //FirebaseFirestore.instance.collection('permissions').doc('5').delete();
     return BlocProvider(
       create: (context) => MapBloc(),
       child: Scaffold(
-        appBar: appBar(context: context, title: 'Araç Detayları'),
+        appBar: appBar(context: context, title: 'Araç Detayları',isBack: true),
         backgroundColor: bodyBackground,
         body: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
@@ -164,8 +165,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                       await generateVehiclePdf(
                                           vehicle, imagePath);
                                     } else {
-                                      print('Arac Verisi Bulunamadı.');
-                                    }
+                                        }
                                   },
                                   icon: const Icon(
                                     Icons.picture_as_pdf,

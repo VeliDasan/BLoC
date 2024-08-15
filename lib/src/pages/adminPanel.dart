@@ -18,7 +18,7 @@ class _AdminpanelState extends State<Adminpanel> {
     final String? uid = FirebaseAuth.instance.currentUser?.uid;
 
     return Scaffold(
-      appBar: appBar(context: context, title: "Admin Panel"),
+      appBar: appBar(context: context, title: "Admin Panel",isBack: true),
       body: uid == null
           ? const Center(child: Text('User not logged in'))
           : FutureBuilder<Map<String, bool>>(

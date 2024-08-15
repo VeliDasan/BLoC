@@ -73,7 +73,7 @@ class EditUserScreen extends StatelessWidget {
                           'name': _nameController.text,
                           'surname': _surnameController.text,
                         });
-                        Navigator.of(context).pop(); // Kaydetme işlemi sonrası geri dön
+                        Navigator.of(context).pop();
                       }
                     },
                     child: const Text('Kaydet'),

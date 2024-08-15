@@ -30,7 +30,7 @@ class _CanedituserState extends State<Canedituser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context: context, title: "Admin Kullanıcı Düzenleme"),
+      appBar: appBar(context: context, title: "Admin Kullanıcı Düzenleme",isBack: true),
       body: StreamBuilder<QuerySnapshot>(
         stream: collectionKisiler.snapshots(),
         builder: (context, snapshot) {
