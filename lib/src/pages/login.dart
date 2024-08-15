@@ -1,7 +1,5 @@
 import 'package:bloc_yapisi/src/blocs/loginBLoC/auth_bloc.dart';
-import 'package:bloc_yapisi/src/blocs/loginBLoC/auth_event.dart';
 import 'package:bloc_yapisi/src/blocs/loginBLoC/auth_state.dart';
-import 'package:bloc_yapisi/src/elements/pageLoading.dart';
 import 'package:bloc_yapisi/src/pages/list.dart';
 import 'package:bloc_yapisi/src/repositories/auth_repository.dart';
 import 'package:bloc_yapisi/src/utils/global.dart';
@@ -32,7 +30,8 @@ class Login extends StatelessWidget {
               elevation: 0,
               title: const Text(
                 "Giriş",
-                style: TextStyle(fontWeight: FontWeight.bold,color: Color(0xFF0c3143)),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Color(0xFF0c3143)),
               ),
               bottom: const TabBar(
                 labelColor: Colors.white,
@@ -74,8 +73,8 @@ class Login extends StatelessWidget {
                   if (state is ResetPasswordSuccess) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content:
-                          Text('Şifre sıfırlama e-postası gönderildi')),
+                          content: Text(
+                              'Şifre sıfırlama e-postası gönderildi')),
                     );
                   }
                 },
@@ -90,12 +89,17 @@ class Login extends StatelessWidget {
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: TabBarView(
-                            children: [
-                              buildLoginTab(context),
-                              buildSignUpTab(context),
-                              buildResetPasswordTab(context),
-                            ],
+                          child: SingleChildScrollView(
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height,
+                              child: TabBarView(
+                                children: [
+                                  buildLoginTab(context),
+                                  buildSignUpTab(context),
+                                  buildResetPasswordTab(context),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),

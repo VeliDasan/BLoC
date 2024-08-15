@@ -24,6 +24,7 @@ dependencies:
   pdf:
   printing:
   firebase_storage:
+  geocoding:
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -150,231 +150,231 @@ class _UserPageState extends State<UserPage> {
     final user = FirebaseAuth.instance.currentUser;
 
     return BlocProvider(
-      create: (context) => FirebaseBloc(
-        FirebaseInitial(),
-        userRepository: UserRepository(),
-      )..add(FetchUserInfoRequested(uid: user!.uid)),
-      child: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            title: const Text(
-              "Kullanıcı Bilgileri",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            centerTitle: true,
-            backgroundColor: appBarBackgroundColor,
-          ),
-          backgroundColor: bodyBackground,
-          body: BlocListener<FirebaseBloc, FirebaseState>(
-            listener: (context, state) {
-              if (state is UserDeleted) {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const Login()),
-                      (route) => false,
-                );
-              } else if (state is UserInfoUpdated) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Güncelleme Durumu'),
-                      content: const Text(
-                          'Bilgileriniz güncellenmiştir, giriş ekranına yönlendiriliyorsunuz...'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => const Login()),
-                                  (route) => false,
-                            );
-                          },
-                          child: const Text('Tamam'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              } else if (state is UserPasswordUpdated) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Güncelleme Durumu'),
-                      content: const Text(
-                          'Şifreniz güncellenmiştir, giriş ekranına yönlendiriliyorsunuz...'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => const Login()),
-                                  (route) => false,
-                            );
-                          },
-                          child: const Text('Tamam'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
+        create: (context) => FirebaseBloc(
+          FirebaseInitial(),
+          userRepository: UserRepository(),
+        )..add(FetchUserInfoRequested(uid: user!.uid)),
+        child: GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
             },
-            child: BlocBuilder<FirebaseBloc, FirebaseState>(
-              builder: (context, state) {
-                if (state is FirebaseLoading) {
-                  return Center(child: pageLoading());
-                } else if (state is UserInfoLoaded) {
-                  final userInfo =
-                  state.userInfo.data() as Map<String, dynamic>?;
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                title: const Text(
+                  "Kullanıcı Bilgileri",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                centerTitle: true,
+                backgroundColor: appBarBackgroundColor,
+              ),
+              backgroundColor: bodyBackground,
+              body: BlocListener<FirebaseBloc, FirebaseState>(
+                listener: (context, state) {
+                  if (state is UserDeleted) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const Login()),
+                          (route) => false,
+                    );
+                  } else if (state is UserInfoUpdated) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Güncelleme Durumu'),
+                          content: const Text(
+                              'Bilgileriniz güncellenmiştir, giriş ekranına yönlendiriliyorsunuz...'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => const Login()),
+                                      (route) => false,
+                                );
+                              },
+                              child: const Text('Tamam'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else if (state is UserPasswordUpdated) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Güncelleme Durumu'),
+                          content: const Text(
+                              'Şifreniz güncellenmiştir, giriş ekranına yönlendiriliyorsunuz...'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => const Login()),
+                                      (route) => false,
+                                );
+                              },
+                              child: const Text('Tamam'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                child: BlocBuilder<FirebaseBloc, FirebaseState>(
+                  builder: (context, state) {
+                    if (state is FirebaseLoading) {
+                      return Center(child: pageLoading());
+                    } else if (state is UserInfoLoaded) {
+                      final userInfo =
+                      state.userInfo.data() as Map<String, dynamic>?;
 
-                  if (userInfo != null) {
-                    _emailController.text = userInfo['email'] ?? 'N/A';
-                    _nameController.text = userInfo['name'] ?? 'N/A';
-                    _surnameController.text = userInfo['surname'] ?? 'N/A';
+                      if (userInfo != null) {
+                        _emailController.text = userInfo['email'] ?? 'N/A';
+                        _nameController.text = userInfo['name'] ?? 'N/A';
+                        _surnameController.text = userInfo['surname'] ?? 'N/A';
 
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          buildTextFormField(
-                            controller: _emailController,
-                            labelText: "Yeni Email Adresinizi Giriniz",
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Email boş olamaz';
-                              }
-                              return null;
-                            },
-                            icon: Icons.email,
-                            iconColor: Colors.blue,
-                          ),
-                          buildTextFormField(
-                            controller: _nameController,
-                            labelText: "Ad",
-                            keyboardType: TextInputType.text,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Ad boş olamaz';
-                              }
-                              return null;
-                            },
-                            icon: Icons.person,
-                            iconColor: Colors.green,
-                          ),
-                          buildTextFormField(
-                            controller: _surnameController,
-                            labelText: "Soyad",
-                            keyboardType: TextInputType.text,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Soyad boş olamaz';
-                              }
-                              return null;
-                            },
-                            icon: Icons.person,
-                            iconColor: Colors.green,
-                          ),
-                          const SizedBox(height: 16.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
                             children: [
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 8.0),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.blueAccent, width: 1.0),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: ListTile(
-                                    leading: Icon(Icons.update, color: Colors.orange),
-                                    title: Text('Güncelle'),
-                                    onTap: () {
-                                      final newEmail = _emailController.text;
-                                      final newName = _nameController.text;
-                                      final newSurname = _surnameController.text;
-                                      if (newEmail.isNotEmpty) {
-                                        final updatedData = {
-                                          'email': newEmail,
-                                          'name': newName,
-                                          'surname': newSurname
-                                        };
-                                        context.read<FirebaseBloc>().add(
-                                          UpdateUserInfoRequested(
-                                            uid: user!.uid,
-                                            data: updatedData,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ),
+                              buildTextFormField(
+                                controller: _emailController,
+                                labelText: "Yeni Email Adresinizi Giriniz",
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Email boş olamaz';
+                                  }
+                                  return null;
+                                },
+                                icon: Icons.email,
+                                iconColor: Colors.blue,
                               ),
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(left: 8.0),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.blueAccent, width: 1.0),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: ListTile(
-                                    leading: Icon(Icons.lock, color: Colors.purple),
-                                    title: Text('Şifreyi Güncelle'),
-                                    onTap: () => _showUpdatePasswordDialog(context),
-                                  ),
-                                ),
+                              buildTextFormField(
+                                controller: _nameController,
+                                labelText: "Ad",
+                                keyboardType: TextInputType.text,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Ad boş olamaz';
+                                  }
+                                  return null;
+                                },
+                                icon: Icons.person,
+                                iconColor: Colors.green,
                               ),
+                              buildTextFormField(
+                                controller: _surnameController,
+                                labelText: "Soyad",
+                                keyboardType: TextInputType.text,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Soyad boş olamaz';
+                                  }
+                                  return null;
+                                },
+                                icon: Icons.person,
+                                iconColor: Colors.green,
+                              ),
+                              const SizedBox(height: 16.0),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(right: 8.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.blueAccent, width: 1.0),
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(Icons.update, color: Colors.orange),
+                                        title: Text('Güncelle'),
+                                        onTap: () {
+                                          final newEmail = _emailController.text;
+                                          final newName = _nameController.text;
+                                          final newSurname = _surnameController.text;
+                                          if (newEmail.isNotEmpty) {
+                                            final updatedData = {
+                                              'email': newEmail,
+                                              'name': newName,
+                                              'surname': newSurname
+                                            };
+                                            context.read<FirebaseBloc>().add(
+                                              UpdateUserInfoRequested(
+                                                uid: user!.uid,
+                                                data: updatedData,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 8.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.blueAccent, width: 1.0),
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(Icons.lock, color: Colors.purple),
+                                        title: Text('Şifreyi Güncelle'),
+                                        onTap: () => _showUpdatePasswordDialog(context),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16.0),
+                              Container(
+                                margin: const EdgeInsets.only(top: 8.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.redAccent, width: 1.0),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: const Center(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.delete, color: Colors.red),
+                                        SizedBox(width: 8.0),
+                                        Text('Hesabı Sil'),
+                                      ],
+                                    ),
+                                  ),
+                                  onTap: () => _showDeleteUserDialog(context),
+                                ),
+                              )
+
+
+
                             ],
                           ),
-                          const SizedBox(height: 16.0),
-                          Container(
-                            margin: const EdgeInsets.only(top: 8.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.redAccent, width: 1.0),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: const Center(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.delete, color: Colors.red),
-                                    SizedBox(width: 8.0),
-                                    Text('Hesabı Sil'),
-                                  ],
-                                ),
-                              ),
-                              onTap: () => _showDeleteUserDialog(context),
-                            ),
-                          )
-
-
-
-                        ],
-                      ),
-                    );
-                  } else {
-                    return const Center(
-                        child: Text('No user information available'));
-                  }
-                } else if (state is FirebaseError) {
-                  return Center(child: Text('Error: ${state.error}'));
-                } else {
-                  return const Center(
-                      child: Text('No user information available'));
-                }
-              },
+                        );
+                      } else {
+                        return const Center(
+                            child: Text('No user information available'));
+                      }
+                    } else if (state is FirebaseError) {
+                      return Center(child: Text('Error: ${state.error}'));
+                    } else {
+                      return const Center(
+                          child: Text('No user information available'));
+                    }
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
+            ),
+        );
+    }
 }

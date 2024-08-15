@@ -43,6 +43,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
+    on<FetchUserPermissions>((event, emit) async {
+      try {
+        final permissions = await authRepository.getUserPermissions(event.uid);
+        if (permissions != null) {
+          emit(UserPermissionsLoaded(permissions));
+        } else {
+          emit(UnAuthenticated(error: 'Permissions not found'));
+        }
+      } catch (e) {
+        emit(UnAuthenticated(error: e.toString()));
+      }
+    });
+
 
   }
 

@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/vehicleDetail.dart';
+import '../repositories/auth_repository.dart';
 
 class VehicleRepository {
   final CollectionReference collectionVehicles =
   FirebaseFirestore.instance.collection("vehicles");
+  final AuthRepository authRepository = AuthRepository();
 
   Future<void> addVehicleToFirestore({
     required double fuelTankLevel,
@@ -32,6 +34,10 @@ class VehicleRepository {
       'plate': plate,
       'userId': userId,
     });
+
+    if (userId != null) {
+      await authRepository.addVehicleToUserPermissions(plate);
+    }
   }
 
   Future<VehicleDetail> getVehicleDetail(String plate) async {

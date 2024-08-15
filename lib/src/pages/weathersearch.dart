@@ -132,7 +132,7 @@ class _WeathersearchContentState extends State<WeathersearchContent> {
                           child: Container(
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Colors.indigo, Colors.blueAccent],
+                                colors: [Color(0xFF0c3143), Color(0xFF4a4b65)],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
