@@ -32,7 +32,7 @@ class VehicleRepository {
       'isActive': isActive,
       'sensors': sensors,
       'plate': plate,
-      'userId': userId,
+
     });
 
     if (userId != null) {
@@ -51,9 +51,9 @@ class VehicleRepository {
   }
 
   Stream<List<String>> getVehiclePlatesStream() {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
+
     return collectionVehicles
-        .where('userId', isEqualTo: userId)
+
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) => doc['plate'] as String).toList();
@@ -71,6 +71,18 @@ class VehicleRepository {
   }
 
   Future<void> deleteVehicle(String plate) async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+
+    // Delete the vehicle document from the "vehicles" collection
     await collectionVehicles.doc(plate).delete();
+
+    // Remove the plate from the current user's vehicleIdList in "Kisiler"
+    if (userId != null) {
+      final userDoc = FirebaseFirestore.instance.collection('Kisiler').doc(userId);
+      await userDoc.update({
+        'vehicleIdList': FieldValue.arrayRemove([plate]),
+      });
+    }
   }
+
 }

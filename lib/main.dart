@@ -1,3 +1,4 @@
+import 'package:bloc_yapisi/src/pages/login.dart';
 import 'package:bloc_yapisi/src/pages/splash.dart';
 import 'package:bloc_yapisi/src/utils/notification_service.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true),
-      home: const SplashScreen(),
+      home: const Login(),
     );
   }
 }
