@@ -67,27 +67,34 @@ class VehicleRepository {
   Future<void> deleteVehicle(String plate) async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
 
-    // Delete the vehicle document from the "vehicles" collection
+
     await collectionVehicles.doc(plate).delete();
 
-    // Remove the plate from the current user's vehicleIdList in "Kisiler"
     if (userId != null) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('Kisiler').doc(userId);
-      final userSnapshot = await userDoc.get();
-      if (userSnapshot.exists) {
-        final data = userSnapshot.data() as Map<String, dynamic>;
-        final vehicleIdList = List<String>.from(data['vehicleIdList'] ?? []);
 
-        if (vehicleIdList.contains(plate)) {
-          await FirebaseFirestore.instance
-              .collection('permissions')
-              .doc('vehicleIdList')
-              .delete();
-          vehicleIdList.remove(plate);
-          await userDoc.update({'vehicleIdList': vehicleIdList});
+      final userDoc = FirebaseFirestore.instance.collection('Kisiler').doc(userId);
+      final userSnapshot = await userDoc.get();
+
+      if (userSnapshot.exists) {
+        final userData = userSnapshot.data() as Map<String, dynamic>;
+        String permissionId = userData['permissionId'].toString();
+
+
+        final permissionDoc = FirebaseFirestore.instance.collection('permissions').doc(permissionId);
+        final permissionSnapshot = await permissionDoc.get();
+
+        if (permissionSnapshot.exists) {
+          final permissionData = permissionSnapshot.data() as Map<String, dynamic>;
+          List<dynamic> vehicleIdList = List.from(permissionData['vehicleIdList'] ?? []);
+
+          if (vehicleIdList.contains(plate)) {
+            vehicleIdList.remove(plate);
+
+            await permissionDoc.update({'vehicleIdList': vehicleIdList});
+          }
         }
       }
     }
   }
+
 }
