@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../models/vehicleDetail.dart';
 import '../repositories/auth_repository.dart';
 
 class VehicleRepository {
   final CollectionReference collectionVehicles =
-  FirebaseFirestore.instance.collection("vehicles");
+      FirebaseFirestore.instance.collection("vehicles");
   final AuthRepository authRepository = AuthRepository();
 
   Future<void> addVehicleToFirestore({
@@ -32,7 +31,6 @@ class VehicleRepository {
       'isActive': isActive,
       'sensors': sensors,
       'plate': plate,
-
     });
 
     if (userId != null) {
@@ -51,11 +49,7 @@ class VehicleRepository {
   }
 
   Stream<List<String>> getVehiclePlatesStream() {
-
-    return collectionVehicles
-
-        .snapshots()
-        .map((snapshot) {
+    return collectionVehicles.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => doc['plate'] as String).toList();
     });
   }
@@ -78,11 +72,22 @@ class VehicleRepository {
 
     // Remove the plate from the current user's vehicleIdList in "Kisiler"
     if (userId != null) {
-      final userDoc = FirebaseFirestore.instance.collection('Kisiler').doc(userId);
-      await userDoc.update({
-        'vehicleIdList': FieldValue.arrayRemove([plate]),
-      });
+      final userDoc =
+          FirebaseFirestore.instance.collection('Kisiler').doc(userId);
+      final userSnapshot = await userDoc.get();
+      if (userSnapshot.exists) {
+        final data = userSnapshot.data() as Map<String, dynamic>;
+        final vehicleIdList = List<String>.from(data['vehicleIdList'] ?? []);
+
+        if (vehicleIdList.contains(plate)) {
+          await FirebaseFirestore.instance
+              .collection('permissions')
+              .doc('vehicleIdList')
+              .delete();
+          vehicleIdList.remove(plate);
+          await userDoc.update({'vehicleIdList': vehicleIdList});
+        }
+      }
     }
   }
-
 }

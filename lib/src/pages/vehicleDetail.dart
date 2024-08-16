@@ -40,7 +40,6 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //FirebaseFirestore.instance.collection('permissions').doc('5').delete();
     return BlocProvider(
       create: (context) => MapBloc(),
       child: Scaffold(

@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../repositories/vehicle_repository.dart';
 import 'list_event.dart';
@@ -11,26 +9,17 @@ class ListBloc extends Bloc<ListEvent, ListState> {
   ListBloc(this.vehicleRepository) : super(ListInitial()) {
     on<FetchVehicles>(_onFetchVehicles);
     on<DeleteVehicle>(_onDeleteVehicle);
-    on<UpdateVehicleList>(_onUpdateVehicleList);
+    on<UpdateVehicleList>(_onUpdateVehicleList); // Handle the new event
   }
 
   void _onFetchVehicles(FetchVehicles event, Emitter<ListState> emit) async {
     emit(ListLoading());
     try {
-      // Fetch the user document
-      final userDoc = await FirebaseFirestore.instance
-          .collection('Kisiler')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .get();
-
-      if (userDoc.exists) {
-        final vehicleIdList = userDoc.data()!['vehicleIdList'] as List<String>;
+      await for (final plates in vehicleRepository.getVehiclePlatesStream()) {
         final vehicleDetails = await Future.wait(
-          vehicleIdList.map((plate) => vehicleRepository.getVehicleDetailStream(plate).first),
+          plates.map((plate) => vehicleRepository.getVehicleDetailStream(plate).first),
         );
-        emit(ListLoaded(vehicleIdList, vehicleDetails));
-      } else {
-        emit(ListError("User data not found"));
+        emit(ListLoaded(plates, vehicleDetails));
       }
     } catch (e) {
       emit(ListError("Failed to fetch vehicle plates: ${e.toString()}"));
@@ -44,26 +33,13 @@ class ListBloc extends Bloc<ListEvent, ListState> {
   Future<void> _onDeleteVehicle(DeleteVehicle event, Emitter<ListState> emit) async {
     try {
       await vehicleRepository.deleteVehicle(event.plate);
-
-      // Fetch the user document to get the updated vehicleIdList
-      final userDoc = await FirebaseFirestore.instance
-          .collection('Kisiler')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .get();
-
-      if (userDoc.exists) {
-        final vehicleIdList = userDoc.data()!['vehicleIdList'] as List<String>;
-        final vehicleDetails = await Future.wait(
-          vehicleIdList.map((plate) => vehicleRepository.getVehicleDetailStream(plate).first),
-        );
-        emit(ListLoaded(vehicleIdList, vehicleDetails));
-      } else {
-        emit(ListError("User data not found"));
-      }
+      final plates = await vehicleRepository.getVehiclePlatesStream().first;
+      final vehicleDetails = await Future.wait(
+        plates.map((plate) => vehicleRepository.getVehicleDetailStream(plate).first),
+      );
+      emit(ListLoaded(plates, vehicleDetails));
     } catch (e) {
       emit(ListError(e.toString()));
     }
   }
 }
-
-
