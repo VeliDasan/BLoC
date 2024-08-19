@@ -1,3 +1,4 @@
+import 'package:bloc_yapisi/src/utils/global.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _ListScreenState extends State<ListScreen> {
       create: (context) => ListBloc(VehicleRepository()),
       child: Scaffold(
         appBar: appBar(context: context, title: "Liste", isBack: false),
-        backgroundColor: Colors.grey[200], // Replace with your desired color
+        backgroundColor: bodyBackground,
         body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('Kisiler')
